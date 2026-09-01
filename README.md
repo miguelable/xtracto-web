@@ -44,8 +44,14 @@ robot está para que eso se cumpla aunque alguien pegue el aviso en crudo por de
 ## Formulario de envío sin registro
 
 `formato.html` deja enviar la plantilla de un aviso **sin cuenta de GitHub**. El formulario llama a
-`https://xtracto.app/api/formato`, un Cloudflare Worker (`worker/`) que valida, filtra y crea el
-issue con un token propio. Quien envía no ve GitHub en ningún momento.
+`https://api.xtracto.app/formato`, un Cloudflare Worker (`worker/`) que valida, filtra y crea el
+issue con un token propio.
+
+> **Por qué un subdominio y no `xtracto.app/api/`:** las rutas de Workers solo interceptan tráfico
+> que pasa por el proxy de Cloudflare, y el dominio raíz está en «DNS only» para que GitHub Pages
+> pueda emitir y renovar su certificado. `api.xtracto.app` se declara como `custom_domain` en
+> `wrangler.toml` y Cloudflare le crea su propio registro proxificado y su certificado, sin tocar el
+> DNS del sitio. Quien envía no ve GitHub en ningún momento.
 
 ### Defensas del endpoint
 

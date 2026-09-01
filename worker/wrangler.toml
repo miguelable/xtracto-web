@@ -1,0 +1,26 @@
+name = "xtracto-formatos"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# El Worker vive en su propio subdominio y NO en una ruta de xtracto.app. El motivo es técnico: las
+# rutas de Workers solo interceptan tráfico que pasa por el proxy de Cloudflare, y el dominio raíz
+# está en «DNS only» (nube gris) para que GitHub Pages pueda emitir y renovar su certificado. Con
+# `custom_domain`, Cloudflare crea el registro proxificado y el certificado de api.xtracto.app por su
+# cuenta, sin tocar el DNS del sitio.
+#
+# Al ser otro origen, la petición del formulario lleva preflight CORS; el Worker lo responde y solo
+# acepta Origin https://xtracto.app.
+routes = [
+  { pattern = "api.xtracto.app", custom_domain = true }
+]
+
+# Contador del límite por IP. Guarda hashes con caducidad de una hora, nunca direcciones.
+# Crear con:  npx wrangler kv namespace create LIMITES
+[[kv_namespaces]]
+binding = "LIMITES"
+id = "962d25944c5943b8898955b27e789832"
+
+# Los secretos NO van aquí. Se suben aparte y quedan cifrados en Cloudflare:
+#   npx wrangler secret put GITHUB_TOKEN      -> token preciso, solo Issues:write en el repo
+#   npx wrangler secret put TURNSTILE_SECRET  -> clave secreta del widget de Turnstile
+#   npx wrangler secret put SAL_IP            -> cadena larga al azar, para el hash de las IP

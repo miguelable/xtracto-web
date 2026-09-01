@@ -94,7 +94,7 @@
     </div>
 
     <div class="campo">
-      <div class="cf-turnstile" data-sitekey="PENDIENTE_CLAVE_PUBLICA_TURNSTILE" data-theme="dark"></div>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAEkA8WWBv9dC67Lz" data-theme="dark"></div>
     </div>
 
     <button type="submit" class="boton" id="enviar">Enviar el formato</button>
@@ -165,7 +165,7 @@
     boton.textContent = 'Enviando…';
 
     try {
-      const respuesta = await fetch('/api/formato', {
+      const respuesta = await fetch('https://api.xtracto.app/formato', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
