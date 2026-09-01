@@ -40,3 +40,39 @@ importes, fechas, comercios ni números. Esos envíos llegan aquí como *issues*
 en la plantilla**, lo etiqueta como `revisar-datos` y pide a la persona que lo edite. Si está limpio,
 lo etiqueta `formato-limpio` y da las gracias. Pedimos formas de frase, no gastos de nadie, y el
 robot está para que eso se cumpla aunque alguien pegue el aviso en crudo por descuido.
+
+## Formulario de envío sin registro
+
+`formato.html` deja enviar la plantilla de un aviso **sin cuenta de GitHub**. El formulario llama a
+`https://xtracto.app/api/formato`, un Cloudflare Worker (`worker/`) que valida, filtra y crea el
+issue con un token propio. Quien envía no ve GitHub en ningún momento.
+
+### Defensas del endpoint
+
+| Capa | Qué para |
+|---|---|
+| Solo POST + JSON + `Origin: https://xtracto.app` | Peticiones desde otros sitios y sondas |
+| Corte por tamaño antes de `JSON.parse` | Cuerpos enormes contra el parser |
+| Turnstile verificado en el servidor | Robots |
+| Campo trampa oculto | Rellenadores automáticos |
+| 5 envíos/hora por IP (hash con sal, caduca en 1 h) | Inundación |
+| Validación estricta y longitudes máximas | Basura y campos inesperados |
+| **Rechazo de cualquier dígito en la plantilla** | Datos personales, y de paso casi todo el spam |
+| Saneado de acentos graves, arrobas y controles | Escapar del bloque de código, markdown, menciones |
+
+La comprobación de cifras del navegador es solo comodidad: **la que cuenta es la del Worker**,
+porque el JavaScript de una página lo puede saltar cualquiera.
+
+### Desplegarlo
+
+```bash
+cd worker
+npx wrangler kv namespace create LIMITES     # pega el id en wrangler.toml
+npx wrangler secret put GITHUB_TOKEN         # token preciso: solo Issues:write en este repo
+npx wrangler secret put TURNSTILE_SECRET     # clave secreta del widget
+npx wrangler secret put SAL_IP               # cadena larga al azar
+npx wrangler deploy
+```
+
+Y en `formato.html`, sustituir `PENDIENTE_CLAVE_PUBLICA_TURNSTILE` por la clave **pública** del
+widget. Los secretos quedan cifrados en Cloudflare y nunca en el repositorio.
