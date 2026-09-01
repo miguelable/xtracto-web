@@ -1,0 +1,143 @@
+/*
+ * Mismos tokens que la app (portados a su vez del Quality Test): grises fríos de hue 240, un solo
+ * acento, tarjetas planas con borde de 1px. Si cambia la paleta de la app, cambia aquí a mano.
+ */
+:root {
+  --bg: #0A0E10;
+  --bg-card: #131719;
+  --bg-input: #0E1215;
+  --bg-active: #21272C;
+  --border: #252A2D;
+  --text-1: #ECEFF1;
+  --text-2: #999FA4;
+  --text-3: #646A6E;
+  --accent: #00AEE9;
+  --success: #35C177;
+  --warn: #E6AC3D;
+  --danger: #F14D4C;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.envoltorio { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+header.principal { padding: 96px 0 72px; text-align: center; }
+
+.marca {
+  display: inline-flex; align-items: center; gap: 14px;
+  margin-bottom: 28px;
+}
+.marca .icono {
+  width: 64px; height: 64px; border-radius: 18px;
+  background: linear-gradient(135deg, #161B1E, #0A0E10);
+  border: 1px solid var(--border);
+  display: grid; place-items: center;
+}
+.marca .icono svg { width: 34px; height: 34px; }
+.marca .nombre { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+
+h1 {
+  font-size: clamp(30px, 6vw, 46px);
+  line-height: 1.15; letter-spacing: -1.4px; font-weight: 800;
+  margin: 0 0 18px;
+}
+h1 em { font-style: normal; color: var(--accent); }
+
+.entradilla { font-size: 19px; color: var(--text-2); margin: 0 auto; max-width: 620px; }
+
+section { padding: 56px 0; border-top: 1px solid var(--border); }
+h2 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: 1.4px;
+  color: var(--text-3); font-weight: 700; margin: 0 0 26px;
+}
+h3 { font-size: 20px; letter-spacing: -0.3px; margin: 0 0 8px; }
+p { margin: 0 0 16px; color: var(--text-2); }
+p strong, li strong { color: var(--text-1); font-weight: 600; }
+
+.tarjeta {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.rejilla { display: grid; gap: 16px; }
+@media (min-width: 700px) { .rejilla.dos { grid-template-columns: 1fr 1fr; } }
+
+.pasos { counter-reset: paso; display: grid; gap: 18px; }
+.paso { display: flex; gap: 18px; align-items: flex-start; }
+.paso .num {
+  counter-increment: paso;
+  flex: 0 0 34px; height: 34px; border-radius: 50%;
+  background: var(--bg-active); color: var(--accent);
+  display: grid; place-items: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500;
+}
+.paso .num::before { content: counter(paso); }
+
+code, pre, .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+pre {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+pre .ok { color: var(--success); }
+pre .marcador { color: var(--accent); }
+code { font-size: 0.9em; color: var(--text-1); background: var(--bg-input);
+       border: 1px solid var(--border); border-radius: 5px; padding: 1px 5px; }
+
+ul.limpia { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+ul.limpia li { display: flex; gap: 12px; color: var(--text-2); }
+ul.limpia li .marca-item { flex: 0 0 20px; }
+
+.nunca li .marca-item { color: var(--danger); }
+.siempre li .marca-item { color: var(--success); }
+
+.aviso {
+  border-left: 3px solid var(--warn);
+  background: rgba(230, 172, 61, 0.07);
+  padding: 16px 18px; border-radius: 0 10px 10px 0;
+}
+.aviso p:last-child { margin-bottom: 0; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.boton {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #0A0E10;
+  font-weight: 700; font-size: 15px;
+  padding: 12px 22px; border-radius: 10px;
+  text-decoration: none;
+}
+.boton:hover { filter: brightness(1.08); text-decoration: none; }
+.boton.secundario {
+  background: transparent; color: var(--text-1);
+  border: 1px solid var(--border);
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0 64px;
+  color: var(--text-3); font-size: 14px;
+}
+footer a { color: var(--text-2); }
+
+.idiomas { text-align: right; padding-top: 20px; font-size: 14px; }
+.idiomas a { color: var(--text-3); }
+.idiomas a.activo { color: var(--text-1); font-weight: 600; }

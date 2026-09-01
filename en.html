@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xtracto — your spending records itself, and never leaves your phone</title>
+<meta name="description" content="Xtracto reads your bank alerts and records your spending. No cloud, no accounts, no internet permission.">
+<meta property="og:title" content="Xtracto — your spending records itself">
+<meta property="og:description" content="Reads your bank alerts and records your spending. No network permission: it cannot send your data anywhere.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="envoltorio">
+  <div class="idiomas"><a href="index.html">Español</a> · <a href="en.html" class="activo">English</a></div>
+</div>
+
+<header class="principal">
+  <div class="envoltorio">
+    <div class="marca">
+      <span class="icono">
+        <svg viewBox="0 0 108 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M38 38 L70 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
+          <path d="M70 38 L38 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="nombre">Xtracto</span>
+    </div>
+    <h1>Your spending records itself.<br>And <em>never leaves your phone</em>.</h1>
+    <p class="entradilla">
+      When your bank notifies a card payment or a direct debit, Xtracto reads that alert and turns it
+      into a movement. Nothing to type, no bank to connect, no credentials handed to anyone.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="envoltorio">
+    <h2>Why you can trust it</h2>
+    <p>
+      Almost every expense app asks you to trust its privacy promise. Xtracto does not ask you to
+      trust it: <strong>it declares no internet permission</strong>. That is not a policy, it is a
+      technical limitation you can verify yourself on the file that gets installed:
+    </p>
+    <pre><span class="ok">$</span> aapt2 dump permissions xtracto.apk
+
+package: app.xtracto
+uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pre>
+    <p>
+      That is all. That single permission is internal to Android's own libraries and grants access to
+      nothing. <strong>There is no <code>INTERNET</code></strong>: even if the app wanted to send your
+      data to a server, the operating system would stop it. No servers, no analytics, no ads, no
+      sign-up, no login.
+    </p>
+
+    <div class="rejilla dos" style="margin-top:28px">
+      <div class="tarjeta">
+        <h3>What it never does</h3>
+        <ul class="limpia nunca">
+          <li><span class="marca-item">✕</span><span>Send anything to any server</span></li>
+          <li><span class="marca-item">✕</span><span>Ask for your banking credentials</span></li>
+          <li><span class="marca-item">✕</span><span>Read notifications from anything but a fixed list of finance apps</span></li>
+          <li><span class="marca-item">✕</span><span>Upload your data to cloud backup</span></li>
+          <li><span class="marca-item">✕</span><span>Show ads or ask you to register</span></li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>What it does</h3>
+        <ul class="limpia siempre">
+          <li><span class="marca-item">✓</span><span>Keep your movements in a local database no other app can open</span></li>
+          <li><span class="marca-item">✓</span><span>Hide the screen from screenshots and the Recents view</span></li>
+          <li><span class="marca-item">✓</span><span>Keep the original alert so you can check every amount</span></li>
+          <li><span class="marca-item">✓</span><span>Let you export everything to CSV</span></li>
+          <li><span class="marca-item">✓</span><span>Delete everything on uninstall, because there is no copy anywhere else</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Check it yourself</h2>
+    <p>
+      You do not have to take this page's word for it, or know how to read code: the claim that
+      matters —that the app <strong>cannot connect to the internet</strong>— can be checked against
+      the very file Google Play installs on your phone, in a minute, with official Android tools.
+    </p>
+    <pre><span class="ok"># 1.</span> Find where the app is installed on your phone
+adb shell pm path app.xtracto
+
+<span class="ok"># 2.</span> Pull that file to your computer
+adb pull /data/app/.../base.apk xtracto.apk
+
+<span class="ok"># 3.</span> Ask the file itself what permissions it requests
+aapt2 dump permissions xtracto.apk</pre>
+    <p>
+      If <code>android.permission.INTERNET</code> showed up in that list, the app could send your data
+      somewhere and everything on this page would be a lie. It does not show up.
+    </p>
+    <div class="tarjeta" style="margin-top:22px">
+      <h3>Without installing anything</h3>
+      <p style="margin-bottom:0">
+        On the Google Play listing, under <strong>Data safety</strong>, Google publishes what the app
+        declares about what it collects and shares — and checks that declaration against its own
+        analysis. And under <strong>Settings → Apps → Xtracto → Permissions</strong>, your own phone
+        shows you the real list, with no middleman.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>How it works</h2>
+    <div class="pasos">
+      <div class="paso">
+        <span class="num"></span>
+        <div>
+          <h3>You grant notification access</h3>
+          <p>By hand, in Android's settings, and you can revoke it whenever you want. It is the only
+          thing the app needs, and without it nothing is recorded at all.</p>
+        </div>
+      </div>
+      <div class="paso">
+        <span class="num"></span>
+        <div>
+          <h3>Your bank notifies you, as always</h3>
+          <p>Xtracto reads that alert as it arrives and extracts the amount, merchant, card and date.
+          If two apps announce the same payment, it is recorded once.</p>
+        </div>
+      </div>
+      <div class="paso">
+        <span class="num"></span>
+        <div>
+          <h3>You open the app and it is already there</h3>
+          <p>Monthly total, per-card breakdown compared against last month, and the full history with
+          search. Nothing to type.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Notification access, explained</h2>
+    <p>
+      This is the most sensitive permission the app asks for and it deserves an honest explanation.
+      With it, Android lets Xtracto see the notifications that appear on your phone. Xtracto only
+      looks at those from a <strong>fixed list of finance applications</strong>, which you can review
+      inside the app under Settings. It reads and stores nothing from the rest: your messages, your
+      email and your social networks are discarded untouched.
+    </p>
+    <p>
+      And because the app cannot reach the internet, what it reads has nowhere to go. It stays on
+      your phone, in a database only it can open.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>If your bank is not supported</h2>
+    <p>
+      Xtracto currently understands the alert formats of a specific set of banks. If yours uses
+      another one, the app will tell you: it stores the alert without interpreting it, and you can
+      <strong>send us the format without sending us your data</strong>. Before anything is shared,
+      the app replaces amounts, dates, merchants and numbers with placeholders and shows you exactly
+      what will go out:
+    </p>
+    <pre>A direct debit of 41,52 EUR from FUNDACION EJEMPLO
+has been charged to your account 1234/**56789
+
+                        ↓
+
+A direct debit of <span class="marcador">&lt;amount&gt;</span> EUR from <span class="marcador">&lt;merchant&gt;</span>
+has been charged to your account <span class="marcador">&lt;account&gt;</span></pre>
+    <p>
+      The template alone is enough to add your bank. The app does not do the sending either: it
+      hands the text to the system share sheet and you choose which app sends it, with one last
+      chance to review it.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Download</h2>
+    <p>
+      <a class="boton" href="#">Get it on Google Play</a>
+      <a class="boton secundario" href="privacidad.html">Privacy policy</a>
+    </p>
+    <div class="aviso" style="margin-top:24px">
+      <p><strong>Xtracto is not a banking app.</strong> It does not connect to your bank, cannot read
+      your real balance and cannot move money. It only reads the alerts your bank already sends you.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="envoltorio">
+    <p>Xtracto · Built to work offline · <a href="privacidad.html">Privacy</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

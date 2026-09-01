@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xtracto — tus gastos se apuntan solos, sin salir del móvil</title>
+<meta name="description" content="Xtracto lee los avisos de tu banco y apunta tus gastos. Sin nube, sin cuentas y sin permiso de acceso a internet.">
+<meta property="og:title" content="Xtracto — tus gastos se apuntan solos">
+<meta property="og:description" content="Lee los avisos de tu banco y apunta tus gastos. Sin permiso de red: no puede enviar tus datos a ningún sitio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="envoltorio">
+  <div class="idiomas"><a href="index.html" class="activo">Español</a> · <a href="en.html">English</a></div>
+</div>
+
+<header class="principal">
+  <div class="envoltorio">
+    <div class="marca">
+      <span class="icono">
+        <svg viewBox="0 0 108 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M38 38 L70 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
+          <path d="M70 38 L38 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="nombre">Xtracto</span>
+    </div>
+    <h1>Tus gastos se apuntan solos.<br>Y <em>no salen del móvil</em>.</h1>
+    <p class="entradilla">
+      Cuando tu banco te avisa de una compra o de un recibo, Xtracto lee ese aviso y lo convierte en
+      un movimiento. Sin teclear nada, sin conectar tu banco y sin darle tus credenciales a nadie.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="envoltorio">
+    <h2>Por qué puedes fiarte</h2>
+    <p>
+      Casi todas las apps de gastos te piden que confíes en su promesa de privacidad. Xtracto no te
+      pide que confíes: <strong>no declara permiso de acceso a internet</strong>. No es una política,
+      es una limitación técnica que puedes comprobar tú mismo sobre el archivo que se instala:
+    </p>
+    <pre><span class="ok">$</span> aapt2 dump permissions xtracto.apk
+
+package: app.xtracto
+uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pre>
+    <p>
+      Eso es todo. Ese único permiso es interno de las librerías de Android y no da acceso a nada.
+      <strong>No hay <code>INTERNET</code></strong>: aunque la app quisiera enviar tus datos a un
+      servidor, el sistema operativo se lo impediría. No hay servidores, ni analítica, ni publicidad,
+      ni registro, ni inicio de sesión.
+    </p>
+
+    <div class="rejilla dos" style="margin-top:28px">
+      <div class="tarjeta">
+        <h3>Lo que nunca hace</h3>
+        <ul class="limpia nunca">
+          <li><span class="marca-item">✕</span><span>Enviar nada a ningún servidor</span></li>
+          <li><span class="marca-item">✕</span><span>Pedirte las claves de tu banco</span></li>
+          <li><span class="marca-item">✕</span><span>Leer notificaciones que no sean de las apps financieras de una lista cerrada</span></li>
+          <li><span class="marca-item">✕</span><span>Subir tus datos a la copia de seguridad en la nube</span></li>
+          <li><span class="marca-item">✕</span><span>Mostrar anuncios o pedirte una cuenta</span></li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Lo que sí hace</h3>
+        <ul class="limpia siempre">
+          <li><span class="marca-item">✓</span><span>Guardar tus movimientos en una base local que ninguna otra app puede abrir</span></li>
+          <li><span class="marca-item">✓</span><span>Ocultar la pantalla en capturas y en la vista de Recientes</span></li>
+          <li><span class="marca-item">✓</span><span>Conservar el aviso original para que puedas comprobar cada importe</span></li>
+          <li><span class="marca-item">✓</span><span>Dejarte exportar todo a CSV cuando quieras</span></li>
+          <li><span class="marca-item">✓</span><span>Borrarlo todo al desinstalar, porque no hay copia en ningún otro sitio</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Verifícalo tú mismo</h2>
+    <p>
+      No hace falta que te fíes de esta página, ni que sepas leer código: la afirmación importante
+      —que la app <strong>no puede conectarse a internet</strong>— se comprueba sobre el archivo que
+      Google Play te instala en el móvil, en un minuto y con herramientas oficiales de Android.
+    </p>
+    <pre><span class="ok"># 1.</span> Averigua dónde está instalada la app en tu móvil
+adb shell pm path app.xtracto
+
+<span class="ok"># 2.</span> Tráete ese archivo al ordenador
+adb pull /data/app/.../base.apk xtracto.apk
+
+<span class="ok"># 3.</span> Pregúntale al propio archivo qué permisos pide
+aapt2 dump permissions xtracto.apk</pre>
+    <p>
+      Si en esa lista apareciera <code>android.permission.INTERNET</code>, la app podría enviar tus
+      datos a algún sitio y todo lo que dice esta página sería mentira. No aparece.
+    </p>
+    <div class="tarjeta" style="margin-top:22px">
+      <h3>Sin instalar nada</h3>
+      <p style="margin-bottom:0">
+        En la ficha de Google Play, en <strong>Seguridad de los datos</strong>, Google publica lo que
+        la app declara sobre qué recoge y qué comparte — y contrasta esa declaración con lo que
+        encuentra al analizarla. Y en <strong>Ajustes → Aplicaciones → Xtracto → Permisos</strong>, tu
+        propio teléfono te enseña la lista real, sin intermediarios.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Cómo funciona</h2>
+    <div class="pasos">
+      <div class="paso">
+        <span class="num"></span>
+        <div>
+          <h3>Le das acceso a las notificaciones</h3>
+          <p>A mano, en los ajustes de Android, y puedes retirarlo cuando quieras. Es lo único que
+          necesita para funcionar, y sin ello no registra absolutamente nada.</p>
+        </div>
+      </div>
+      <div class="paso">
+        <span class="num"></span>
+        <div>
+          <h3>Tu banco te avisa, como siempre</h3>
+          <p>Xtracto lee ese aviso en el momento en que llega y extrae el importe, el comercio, la
+          tarjeta y la fecha. Si el mismo pago te lo notifican dos apps, lo registra una sola vez.</p>
+        </div>
+      </div>
+      <div class="paso">
+        <span class="num"></span>
+        <div>
+          <h3>Abres la app y ya está apuntado</h3>
+          <p>Total del mes, desglose por tarjeta comparado con el mes anterior, y el historial
+          completo con buscador. Nada que teclear.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>El acceso a notificaciones, explicado</h2>
+    <p>
+      Es el permiso más delicado que pide la app y merece una explicación honesta. Con él, Android
+      deja que Xtracto vea las notificaciones que aparecen en tu móvil. Xtracto solo mira las de una
+      <strong>lista cerrada de aplicaciones financieras</strong> que puedes consultar dentro de la
+      propia app, en Ajustes. De las demás no lee ni guarda nada: tus mensajes, tu correo y tus redes
+      sociales se descartan sin llegar a tocarse.
+    </p>
+    <p>
+      Y como la app no puede salir a internet, lo que lee no tiene a dónde ir. Se queda en tu
+      teléfono, en una base de datos que solo abre ella.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Si tu banco no está soportado</h2>
+    <p>
+      Xtracto entiende hoy los formatos de aviso de un conjunto concreto de entidades. Si el tuyo usa
+      otro, la app te lo dirá: guardará el aviso sin interpretarlo, y podrás
+      <strong>enviarnos el formato sin enviarnos tus datos</strong>. Antes de compartir nada, la app
+      sustituye importes, fechas, comercios y números por marcadores, y te enseña exactamente el
+      texto que va a salir:
+    </p>
+    <pre>El día 01/09 se ha cargado el recibo de FUNDACION EJEMPLO
+en tu cuenta 1234/**56789 por importe de 41,52 EUR
+
+                        ↓
+
+El día <span class="marcador">&lt;fecha&gt;</span> se ha cargado el recibo de <span class="marcador">&lt;comercio&gt;</span>
+en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span class="marcador">&lt;importe&gt;</span> EUR</pre>
+    <p>
+      Con la plantilla basta para añadir tu banco. El envío tampoco lo hace la app: te lo pasa al
+      selector del sistema y eliges tú con qué aplicación lo mandas, con una última oportunidad de
+      revisarlo.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Descargar</h2>
+    <p>
+      <a class="boton" href="#">Consíguela en Google Play</a>
+      <a class="boton secundario" href="privacidad.html">Política de privacidad</a>
+    </p>
+    <div class="aviso" style="margin-top:24px">
+      <p><strong>Xtracto no es una aplicación de banca.</strong> No se conecta a tu banco, no puede
+      consultar tu saldo real ni mover dinero. Solo lee los avisos que tu banco ya te manda al móvil.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="envoltorio">
+    <p>Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

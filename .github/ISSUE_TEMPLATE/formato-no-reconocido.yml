@@ -1,0 +1,56 @@
+name: Formato de aviso no reconocido
+description: Enviar la plantilla de un aviso que Xtracto todavía no entiende
+title: "[formato] "
+labels: ["formato"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por echar una mano. **Antes de enviar, comprueba que no queda ningún dato tuyo.**
+
+        Si has usado el botón «Ayudar con este formato» de la app, el texto ya viene con los
+        importes, fechas, comercios y números sustituidos por marcadores como `<importe>`.
+        Si lo has escrito a mano, sustitúyelos tú: **no hace falta ni un solo número real** para
+        añadir tu banco, solo la forma de la frase.
+
+        Un robot revisa cada envío y avisa si detecta cifras.
+  - type: input
+    id: entidad
+    attributes:
+      label: Banco o aplicación
+      description: El nombre comercial, para poder agrupar los envíos.
+      placeholder: BBVA, CaixaBank, Revolut...
+    validations:
+      required: true
+  - type: input
+    id: paquete
+    attributes:
+      label: Identificador de la app
+      description: Aparece en la propia captura, dentro de Xtracto.
+      placeholder: com.ejemplo.banca
+    validations:
+      required: true
+  - type: textarea
+    id: plantilla
+    attributes:
+      label: Plantilla del aviso
+      description: Pega aquí lo que te dio la app. Sin números.
+      render: text
+      placeholder: |
+        título: (vacío)
+        texto: Compra de <importe> EUR en <comercio> con la tarjeta <tarjeta>
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Qué operación es
+      options:
+        - Compra con tarjeta
+        - Recibo domiciliado
+        - Transferencia enviada
+        - Ingreso o abono
+        - Bizum
+        - Otra
+    validations:
+      required: true

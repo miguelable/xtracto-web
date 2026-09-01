@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ¿Un fallo o una idea?
+    url: https://github.com/miguelable/xtracto-web/discussions
+    about: Para cualquier otra cosa que no sea enviar un formato de aviso.
