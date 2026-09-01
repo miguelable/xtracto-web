@@ -9,9 +9,9 @@ la web y la automatización de los envíos.
 ## Publicar en GitHub Pages
 
 1. Ajustes del repositorio → **Pages** → *Source*: `Deploy from a branch`, rama `main`, carpeta `/`.
-2. La web queda en `https://miguelable.github.io/xtracto-web/`.
-3. Esa dirección, con `/privacidad.html` al final, es la **URL de política de privacidad** que hay
-   que meter en Play Console.
+2. La web queda en **https://xtracto.app** (el fichero `CNAME` de la raíz fija el dominio;
+   en Cloudflare hay que apuntar el DNS a las IPs de GitHub Pages **con el proxy desactivado**).
+3. **https://xtracto.app/privacidad.html** es la URL de política de privacidad que va en Play Console.
 
 ## Ficheros
 
