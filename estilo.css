@@ -65,22 +65,30 @@ header.principal { padding: 96px 0 72px; text-align: center; }
 
 .marca {
   display: inline-flex; align-items: center; gap: 14px;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 
 /* Estado del proyecto. Mientras la app no esté publicada, la portada lo dice antes de que nadie
    se lea tres secciones sobre cómo verificar un APK que todavía no puede instalar. */
 .chip {
-  display: inline-flex; align-items: center; gap: 9px;
+  /* `flex` y no `inline-flex`: siendo inline caía en la misma línea que la marca, que también lo
+     es, y quedaba colgando a su derecha alineado por la línea base. Con fit-content y margen
+     automático se centra por sí mismo, sin depender del text-align del contenedor. */
+  display: flex; width: fit-content;
+  align-items: center; gap: 9px;
   background: rgba(230, 172, 61, 0.09);
   border: 1px solid rgba(230, 172, 61, 0.35);
   color: var(--warn);
   font-size: 12.5px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1.1px;
-  padding: 5px 14px; border-radius: 999px;
-  margin: 0 0 20px;
+  /* El letter-spacing deja un hueco detrás de la última letra. Se le descuenta a la derecha para
+     que el texto quede centrado de verdad dentro de la píldora. */
+  padding: 5px 13px 5px 14px;
+  border-radius: 999px;
+  margin: 0 auto 22px;
 }
-.chip .punto { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); }
+/* flex-shrink a 0: es un punto, no debe achatarse en elipse si la línea se estrecha. */
+.chip .punto { flex: 0 0 7px; height: 7px; border-radius: 50%; background: var(--warn); }
 /* La marca ya tiene silueta propia: no necesita la baldosa con borde que le hacía de icono al
    aspa simple de antes. Se genera con marca/generar.py, no se edita a mano. */
 .marca .icono { width: 56px; height: 56px; display: block; }
@@ -112,6 +120,10 @@ p strong, li strong { color: var(--text-1); font-weight: 600; }
 }
 .rejilla { display: grid; gap: 16px; }
 @media (min-width: 700px) { .rejilla.dos { grid-template-columns: 1fr 1fr; } }
+
+.faq h3 { font-size: 18px; margin: 30px 0 8px; }
+.faq > h3:first-child { margin-top: 0; }
+.faq p:last-child { margin-bottom: 0; }
 
 .pasos { counter-reset: paso; display: grid; gap: 18px; }
 .paso { display: flex; gap: 18px; align-items: flex-start; }

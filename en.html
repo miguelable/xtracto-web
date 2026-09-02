@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
-<title>Xtracto — your spending records itself, and never leaves your phone</title>
-<meta name="description" content="Xtracto reads your bank alerts and records your spending. No cloud, no accounts, no internet permission.">
+<title>Expense app that reads your bank alerts — Xtracto</title>
+<meta name="description" content="Android app that reads your bank alerts and records your spending on its own. No cloud, no accounts, no internet permission: it cannot send your data anywhere.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://xtracto.app/en.html">
 <link rel="alternate" hreflang="es" href="https://xtracto.app/">
 <link rel="alternate" hreflang="en" href="https://xtracto.app/en.html">
@@ -48,6 +49,67 @@
       "permissions": "Notification access",
       "privacyPolicy": "https://xtracto.app/privacidad.html",
       "description": "Reads the alerts your bank sends you and turns them into transactions. It declares no internet permission, so it cannot send anything to any server."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does Xtracto connect to my bank?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It does not ask for your credentials, it does not use Open Banking, and it cannot read your real balance or move money. It only reads the alerts your bank already sends to your phone and turns them into transactions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it need an internet connection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, and it cannot have one: the app declares no INTERNET permission. It works entirely offline, and even if it wanted to send your data to a server the operating system would stop it. That is not a promise, it is a technical limitation you can verify yourself on the installed file."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it safe to grant notification access?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is the most sensitive permission the app asks for and it deserves an honest answer. With it, Android lets Xtracto see the notifications that arrive on your phone. Xtracto only looks at those from a fixed list of finance applications that you can review inside the app; it reads and stores nothing from the rest, so your messages, your email and your social networks are discarded untouched. And because the app cannot reach the internet, what it reads has nowhere to go. You can revoke the permission whenever you want from Android settings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is my spending data stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On your phone, in a local database no other application can open. It is not uploaded to cloud backup, you can export it to CSV whenever you want, and uninstalling deletes it completely, because there is no copy anywhere else."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which banks does it recognise?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A specific set of banks, which grows with the formats people send in. If yours is not there, the app will tell you: it stores the alert without interpreting it and you can send us the message template without sending us any of your data, because it replaces amounts, dates, merchants and numbers with placeholders first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an iPhone version?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, and for now there cannot be: iOS does not let an application read other apps’ notifications, which is exactly what Xtracto lives on. It is a limitation of the system, not a decision of ours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When will it be available to download?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is still in development. What is left is recognising the alert formats of more banks and completing the Google Play release. When it is ready, it will be available to everyone."
+          }
+        }
+      ]
     }
   ]
 }
@@ -224,6 +286,28 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
     <p style="margin-top:22px">
       <a class="boton secundario" href="format.html">Send my bank's format</a>
     </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <h3>Does Xtracto connect to my bank?</h3>
+      <p>No. It does not ask for your credentials, it does not use Open Banking, and it cannot read your real balance or move money. It only reads the alerts your bank <strong>already sends to your phone</strong> and turns them into transactions.</p>
+      <h3>Does it need an internet connection?</h3>
+      <p>No, and it cannot have one: the app <strong>declares no <code>INTERNET</code> permission</strong>. It works entirely offline, and even if it wanted to send your data to a server the operating system would stop it. That is not a promise, it is a technical limitation you can verify yourself on the installed file.</p>
+      <h3>Is it safe to grant notification access?</h3>
+      <p>It is the most sensitive permission the app asks for and it deserves an honest answer. With it, Android lets Xtracto see the notifications that arrive on your phone. Xtracto only looks at those from a <strong>fixed list of finance applications</strong> that you can review inside the app; it reads and stores nothing from the rest, so your messages, your email and your social networks are discarded untouched. And because the app cannot reach the internet, what it reads has nowhere to go. You can revoke the permission whenever you want from Android settings.</p>
+      <h3>Where is my spending data stored?</h3>
+      <p>On your phone, in a local database no other application can open. It is not uploaded to cloud backup, you can export it to CSV whenever you want, and uninstalling deletes it completely, because there is no copy anywhere else.</p>
+      <h3>Which banks does it recognise?</h3>
+      <p>A specific set of banks, which grows with the formats people send in. If yours is not there, the app will tell you: it stores the alert without interpreting it and you can send us the message template <strong>without sending us any of your data</strong>, because it replaces amounts, dates, merchants and numbers with placeholders first.</p>
+      <h3>Is there an iPhone version?</h3>
+      <p>No, and for now there cannot be: iOS does not let an application read other apps’ notifications, which is exactly what Xtracto lives on. It is a limitation of the system, not a decision of ours.</p>
+      <h3>When will it be available to download?</h3>
+      <p>It is still in development. What is left is recognising the alert formats of more banks and completing the Google Play release. When it is ready, it will be available to everyone.</p>
+    </div>
   </div>
 </section>
 

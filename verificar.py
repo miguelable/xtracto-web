@@ -108,6 +108,25 @@ def json_ld_valido():
                 mal('JSON-LD', f'{f}: {e}')
 
 
+def faq_coincide_con_la_pagina():
+    """Declararle a Google preguntas que no están en la página es exactamente lo que trata como
+    engaño. Se generan desde la misma fuente, pero nada impide que alguien edite solo una."""
+    for f in paginas():
+        t = texto(f)
+        for bloque in re.findall(r'<script type="application/ld\+json">(.*?)</script>', t, re.S):
+            try:
+                grafo = json.loads(bloque).get('@graph', [])
+            except json.JSONDecodeError:
+                continue                      # ya lo canta json_ld_valido
+            for nodo in grafo:
+                if nodo.get('@type') != 'FAQPage':
+                    continue
+                visibles = set(re.findall(r'<h3>([^<]+\?)</h3>', t))
+                for pregunta in (q['name'] for q in nodo['mainEntity']):
+                    if pregunta not in visibles:
+                        mal('FAQ', f'{f} declara «{pregunta}» y no está escrita en la página')
+
+
 def sitemap_coherente():
     ruta = RAIZ / 'sitemap.xml'
     if not ruta.exists():
@@ -130,7 +149,8 @@ def sitemap_coherente():
 
 def main():
     for comprobacion in (referencias_resuelven, canonicals_y_alternativas, cabecera_de_la_politica,
-                         nada_de_google, todas_con_csp, json_ld_valido, sitemap_coherente):
+                         nada_de_google, todas_con_csp, json_ld_valido,
+                         faq_coincide_con_la_pagina, sitemap_coherente):
         comprobacion()
         print(f'  · {comprobacion.__name__.replace("_", " ")}')
     if fallos:
