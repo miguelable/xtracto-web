@@ -68,8 +68,17 @@ export default {
     if (datos.web) return exito('descartado');
 
     const ip = request.headers.get('CF-Connecting-IP') || '';
+
+    // El orden importa. Antes se contaba el envío ANTES de validar el captcha, así que un token
+    // caducado que reintentabas te gastaba cuota: cinco tropiezos y te quedabas fuera una hora sin
+    // haber llegado a enviar nada. Ahora se mira el contador sin tocarlo, se valida, y solo se
+    // apunta lo que ha pasado el captcha.
     if (await superaLimite(env, ip)) return error(429, 'limite');
-    if (!(await turnstileValido(env, datos.turnstile, ip))) return error(403, 'captcha');
+
+    const captcha = await revisarTurnstile(env, datos.turnstile, ip);
+    if (!captcha.ok) return error(403, captcha.motivo);
+
+    await apuntarEnvio(env, ip);
 
     const campos = validar(datos);
     if (campos.error) return error(400, campos.error);
@@ -114,14 +123,24 @@ function limpiar(valor) {
     .replace(/\n{3,}/g, '\n\n');
 }
 
+/** La IP nunca se almacena en claro: solo su hash con sal, y con caducidad de una hora. */
+async function claveLimite(env, ip) {
+  return 'ip:' + (await sha256(ip + (env.SAL_IP || '')));
+}
+
+/** Mira el contador sin tocarlo. */
 async function superaLimite(env, ip) {
   if (!env.LIMITES || !ip) return false;
-  const clave = 'ip:' + (await sha256(ip + (env.SAL_IP || '')));
+  const actual = parseInt((await env.LIMITES.get(await claveLimite(env, ip))) || '0', 10);
+  return actual >= LIMITE_POR_HORA;
+}
+
+/** Apunta un envío que ya ha pasado el captcha. */
+async function apuntarEnvio(env, ip) {
+  if (!env.LIMITES || !ip) return;
+  const clave = await claveLimite(env, ip);
   const actual = parseInt((await env.LIMITES.get(clave)) || '0', 10);
-  if (actual >= LIMITE_POR_HORA) return true;
-  // La IP nunca se almacena en claro: solo su hash con sal, y con caducidad de una hora.
   await env.LIMITES.put(clave, String(actual + 1), { expirationTtl: 3600 });
-  return false;
 }
 
 async function sha256(valor) {
@@ -129,20 +148,51 @@ async function sha256(valor) {
   return [...new Uint8Array(resumen)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-async function turnstileValido(env, token, ip) {
-  if (typeof token !== 'string' || token.length < 10 || token.length > 2048) return false;
+/**
+ * Verifica el token de Turnstile contra Cloudflare.
+ *
+ * Devuelve el motivo separado y no un booleano: «no mandaste token», «Cloudflare dijo que no» y
+ * «la clave secreta no está puesta» daban los tres el mismo `captcha` opaco, y con eso no se puede
+ * distinguir a un robot de un despliegue mal configurado. El `error-codes` que responde Cloudflare
+ * se escribe en el log, donde lo ve el operador con `wrangler tail`, y no en la respuesta, que la
+ * lee cualquiera.
+ */
+async function revisarTurnstile(env, token, ip) {
+  if (typeof token !== 'string' || token.length < 10 || token.length > 2048) {
+    return { ok: false, motivo: 'captcha_sin_token' };
+  }
+  if (!env.TURNSTILE_SECRET) {
+    // Sin clave, siteverify rechaza a todo el mundo y el formulario queda muerto en silencio.
+    console.error('TURNSTILE_SECRET no está configurada: se rechaza cualquier envío.');
+    return { ok: false, motivo: 'captcha' };
+  }
 
   const cuerpo = new FormData();
   cuerpo.append('secret', env.TURNSTILE_SECRET);
   cuerpo.append('response', token);
   if (ip) cuerpo.append('remoteip', ip);
 
-  const respuesta = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    body: cuerpo,
-  });
-  const resultado = await respuesta.json();
-  return resultado.success === true;
+  let resultado;
+  try {
+    const respuesta = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: cuerpo,
+    });
+    resultado = await respuesta.json();
+  } catch (e) {
+    console.error('siteverify no respondió:', e && e.message);
+    return { ok: false, motivo: 'captcha' };
+  }
+
+  if (resultado.success === true) return { ok: true };
+
+  // Aquí está el diagnóstico que antes se tiraba a la basura:
+  //   invalid-input-secret    -> la clave secreta no es la del widget al que pertenece el sitekey
+  //   invalid-input-response  -> token corrupto, o el remoteip no cuadra con el que vio Turnstile
+  //   timeout-or-duplicate    -> token ya usado o caducado (valen 300 s y una sola vez)
+  console.error('siteverify rechazó el token. error-codes:',
+                JSON.stringify(resultado['error-codes'] || []));
+  return { ok: false, motivo: 'captcha' };
 }
 
 async function crearIssue(env, campos) {
