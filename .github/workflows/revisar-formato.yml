@@ -1,8 +1,13 @@
 # Revisa automáticamente cada formato que llega y avisa si se ha colado un dato personal.
 #
-# El motivo de que esto exista: pedimos plantillas, no gastos. Si alguien pega el aviso en crudo,
-# su importe y sus dígitos de tarjeta quedarían públicos en un issue. El robot no puede impedirlo,
-# pero lo detecta al instante, lo etiqueta y le pide a la persona que lo edite.
+# El motivo de que esto exista: pedimos plantillas, no gastos. Si alguien pega el aviso en crudo, su
+# importe y sus dígitos de tarjeta quedarían públicos en un issue. El robot no puede impedirlo, pero
+# lo detecta al instante, lo etiqueta y le pide a la persona que lo edite.
+#
+# Se ejecuta sobre TODOS los issues y decide por el contenido, no por la etiqueta. Antes arrancaba
+# solo si el issue ya venía etiquetado como `formato`, y bastaba con que a alguien se le creara uno
+# sin esa etiqueta para que se saltara la revisión entera. Justo lo que hay que evitar: quien más
+# probabilidades tiene de pegar un aviso en crudo es precisamente quien no ha usado el formulario.
 name: Revisar formato enviado
 
 on:
@@ -14,63 +19,91 @@ permissions:
 
 jobs:
   revisar:
-    if: contains(github.event.issue.labels.*.name, 'formato')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7
         with:
           script: |
+            const LIMPIO = 'formato-limpio';
+            const SUCIO = 'revisar-datos';
+
+            // ¿Es un envío de formato? Lo dice el cuerpo. Un issue cualquiera se ignora en silencio.
             const cuerpo = context.payload.issue.body || '';
-
-            // Solo se mira la sección de la plantilla: el nombre del paquete puede llevar cifras
-            // legítimas (com.app2), y la fecha de apertura del issue no es cosa nuestra.
-            const bloque = cuerpo.split(/###\s*Plantilla del aviso/i)[1] || '';
-            const plantilla = bloque.split(/###/)[0] || '';
-            const cifras = plantilla.match(/\d/g) || [];
-
-            const etiquetar = async (nombre, color, descripcion) => {
-              try {
-                await github.rest.issues.createLabel({
-                  ...context.repo, name: nombre, color, description: descripcion,
-                });
-              } catch (e) { /* ya existía */ }
-              await github.rest.issues.addLabels({
-                ...context.repo, issue_number: context.issue.number, labels: [nombre],
-              });
-            };
-
-            if (cifras.length > 0) {
-              await etiquetar('revisar-datos', 'd93f0b', 'Puede contener datos personales');
-              await github.rest.issues.createComment({
-                ...context.repo,
-                issue_number: context.issue.number,
-                body: [
-                  '⚠️ **He detectado ' + cifras.length + ' cifra(s) en la plantilla.**',
-                  '',
-                  'Puede que sean parte del formato, pero también puede que se haya colado un',
-                  'importe, una fecha o unos dígitos de tarjeta. **Edita el mensaje y sustitúyelos**',
-                  'por marcadores (`<importe>`, `<fecha>`, `<tarjeta>`): para añadir tu banco no',
-                  'hace falta ni un número real.',
-                  '',
-                  'Al guardar la edición vuelvo a revisarlo.',
-                  '',
-                  '_Este aviso es automático._',
-                ].join('\n'),
-              });
+            const tras = cuerpo.split(/#+\s*Plantilla del aviso/i)[1];
+            if (tras === undefined) {
+              core.info('No trae sección de plantilla: no es un envío de formato, no lo reviso.');
               return;
             }
 
-            await etiquetar('formato-limpio', '0e8a16', 'Revisado: sin datos personales');
+            // Solo se mira la plantilla: el nombre del paquete puede llevar cifras legítimas
+            // (com.app2), y la fecha de apertura del issue no es cosa nuestra.
+            const plantilla = tras.split(/\n#+\s|\n---/)[0] || '';
+            const cifras = plantilla.match(/\d/g) || [];
+            const sucio = cifras.length > 0;
+
+            const puestas = (context.payload.issue.labels || []).map((e) => e.name);
+            const quiero = sucio ? SUCIO : LIMPIO;
+            const sobra = sucio ? LIMPIO : SUCIO;
+
+            const crear = async (nombre, color, descripcion) => {
+              try {
+                await github.rest.issues.createLabel({ ...context.repo, name: nombre, color, description: descripcion });
+              } catch (e) { /* ya existía */ }
+            };
+
+            // El envío puede haber entrado sin etiquetar; que la lleve, para poder filtrarlos.
+            const anadir = [];
+            if (!puestas.includes('formato')) {
+              await crear('formato', 'ededed', 'Formato de aviso enviado');
+              anadir.push('formato');
+            }
+            if (!puestas.includes(quiero)) {
+              await crear(SUCIO, 'd93f0b', 'Puede contener datos personales');
+              await crear(LIMPIO, '0e8a16', 'Revisado: sin datos personales');
+              anadir.push(quiero);
+            }
+            if (anadir.length) {
+              await github.rest.issues.addLabels({ ...context.repo, issue_number: context.issue.number, labels: anadir });
+            }
+
+            // Si alguien corrige su envío, la etiqueta anterior tiene que irse. Antes se quedaba, y
+            // un issue ya limpio seguía marcado como sospechoso para siempre.
+            if (puestas.includes(sobra)) {
+              try {
+                await github.rest.issues.removeLabel({ ...context.repo, issue_number: context.issue.number, name: sobra });
+              } catch (e) { /* ya no estaba */ }
+            }
+
+            // Solo se comenta cuando el veredicto cambia. Con `edited` en la lista de disparadores,
+            // comentar siempre llenaría el hilo de mensajes idénticos a cada retoque del texto.
+            if (puestas.includes(quiero)) {
+              core.info('El veredicto no ha cambiado: no comento otra vez.');
+              return;
+            }
+
+            const cuerpoComentario = sucio ? [
+              '⚠️ **He detectado ' + cifras.length + ' cifra(s) en la plantilla.**',
+              '',
+              'Puede que sean parte del formato, pero también puede que se haya colado un',
+              'importe, una fecha o unos dígitos de tarjeta. **Edita el mensaje y sustitúyelos**',
+              'por marcadores (`<importe>`, `<fecha>`, `<tarjeta>`): para añadir tu banco no',
+              'hace falta ni un número real.',
+              '',
+              'Al guardar la edición vuelvo a revisarlo.',
+              '',
+              '_Este aviso es automático._',
+            ] : [
+              '✅ **Plantilla recibida y sin ninguna cifra.** Gracias.',
+              '',
+              'Pasará a la lista de formatos por añadir al parser. Cuando esté soportado, te aviso',
+              'por aquí y podrás recuperar los avisos que ya tengas guardados con el botón',
+              '**Reprocesar** de la pantalla de Ajustes de la app.',
+              '',
+              '_Este aviso es automático._',
+            ];
+
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: context.issue.number,
-              body: [
-                '✅ **Plantilla recibida y sin ninguna cifra.** Gracias.',
-                '',
-                'Pasará a la lista de formatos por añadir al parser. Cuando esté soportado, te aviso',
-                'por aquí y podrás recuperar los avisos que ya tengas guardados con el botón',
-                '**Reprocesar** de la pantalla de Ajustes de la app.',
-                '',
-                '_Este aviso es automático._',
-              ].join('\n'),
+              body: cuerpoComentario.join('\n'),
             });
