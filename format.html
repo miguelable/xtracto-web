@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Send your bank's format — Xtracto</title>
+<meta name="description" content="Send the template of an alert Xtracto does not recognise. No sign-up, and not a single piece of your data.">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src https://api.xtracto.app https://challenges.cloudflare.com; base-uri 'none'; form-action 'none'">
+<meta property="og:title" content="Send your bank's format — Xtracto">
+<meta property="og:description" content="Send the template of an alert Xtracto does not recognise. No sign-up, and not a single piece of your data.">
+<meta property="og:image" content="https://xtracto.app/og-en.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="formato.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="formato.js" defer></script>
+</head>
+<body>
+
+<div class="envoltorio" style="padding-top:32px">
+  <div class="idiomas"><a href="formato.html">Español</a> · <a href="format.html" class="activo">English</a></div>
+  <p><a href="en.html">&larr; Xtracto</a></p>
+
+  <h1 style="font-size:32px;margin-bottom:12px">Send your bank's format</h1>
+  <p style="color:var(--text-2);max-width:620px">
+    If Xtracto does not recognise your bank's alerts, the <strong>template</strong> of the message is
+    enough to add it. You do not need to register anywhere, and we do not want a single piece of your
+    data: amounts, dates, merchants and numbers <strong>must not appear</strong> in what you send.
+  </p>
+
+  <div class="aviso" style="margin:24px 0 32px">
+    <p style="margin:0"><strong>The easy way:</strong> open Xtracto, go to <strong>Captures</strong>,
+    expand the alert it does not recognise and press <strong>“Help with this format”</strong>. The app
+    brings you here with everything filled in and already obfuscated.</p>
+  </div>
+
+  <form id="formulario" autocomplete="off">
+    <div class="campo">
+      <label for="entidad">Bank or application</label>
+      <input id="entidad" name="entidad" maxlength="60" required placeholder="Revolut, Monzo, N26...">
+    </div>
+
+    <div class="campo">
+      <label for="paquete">Application id</label>
+      <input id="paquete" name="paquete" maxlength="100" required placeholder="com.example.bank"
+             pattern="[a-z][a-z0-9_]*(\.[a-z0-9_]+)+">
+      <p class="ayuda">It appears inside Xtracto, under the text of the capture. Something like <code>com.rsi.nba</code>.</p>
+    </div>
+
+    <div class="campo">
+      <label for="tipo">Which kind of operation</label>
+      <!-- Los `value` van en español a propósito: el Worker valida contra una lista cerrada de
+           valores en español, y traducirlos haría que se rechazara todo envío desde esta página. -->
+      <select id="tipo" name="tipo" required>
+        <option value="">Choose one…</option>
+        <option value="Compra con tarjeta">Card payment</option>
+        <option value="Recibo domiciliado">Direct debit</option>
+        <option value="Transferencia enviada">Outgoing transfer</option>
+        <option value="Ingreso o abono">Incoming payment</option>
+        <option value="Bizum">Bizum</option>
+        <option value="Otra">Other</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="plantilla">Alert template</label>
+      <textarea id="plantilla" name="plantilla" maxlength="2000" required
+        placeholder="title: (empty)&#10;text: Payment of &lt;amount&gt; EUR at &lt;merchant&gt; with card &lt;card&gt;"></textarea>
+      <p class="ayuda">
+        Replace every piece of data with a placeholder: <code>&lt;amount&gt;</code>,
+        <code>&lt;date&gt;</code>, <code>&lt;time&gt;</code>, <code>&lt;merchant&gt;</code>,
+        <code>&lt;card&gt;</code>, <code>&lt;account&gt;</code>.
+        <strong>Not a single number can be left.</strong>
+      </p>
+      <div class="alerta" id="avisoCifras"></div>
+    </div>
+
+    <!-- Trampa para robots: invisible para una persona, irresistible para un rellenador automático. -->
+    <div class="oculto" aria-hidden="true">
+      <label for="web">Do not fill this field</label>
+      <input id="web" name="web" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="campo">
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAEkA8WWBv9dC67Lz" data-theme="dark"></div>
+    </div>
+
+    <button type="submit" class="boton" id="enviar">Send the format</button>
+    <div class="alerta" id="resultado"></div>
+
+    <p class="ayuda" style="margin-top:28px">
+      What you send is published as a public issue in the project's repository, with the text exactly
+      as it reads above. No email address and no identifier of yours is stored; your IP is used only
+      to limit submissions per hour and is kept as a salted digest, never in the clear.
+      See the <a href="privacidad.html#en">privacy policy</a>.
+    </p>
+  </form>
+</div>
+
+</body>
+</html>

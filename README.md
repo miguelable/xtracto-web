@@ -20,9 +20,11 @@ la web y la automatización de los envíos.
 | `index.html` | Portada en español |
 | `en.html` | Portada en inglés |
 | `privacidad.html` | Política de privacidad — **generada**, no editar a mano |
-| `formato.html` | Formulario de envío sin cuenta de GitHub |
+| `formato.html`, `format.html` | Formulario de envío sin cuenta de GitHub, en español y en inglés |
+| `formato.css`, `formato.js` | Los comparten las dos. Fuera de la página para poder prohibir el código en línea |
 | `404.html` | Página de dirección inexistente. GitHub Pages la sirve sola |
 | `estilo.css` | Los mismos tokens de diseño que la app |
+| `fuentes/bajar.py` | Trae Manrope e IBM Plex Mono para servirlas desde aquí |
 | `robots.txt` | Abre todo el sitio a los buscadores |
 | `sitemap.py` | Regenera `sitemap.xml` leyendo las páginas y preguntándole las fechas a git |
 | `construir.py` | Regenera `privacidad.html` desde el `PRIVACY.md` del repo de la app |
@@ -89,6 +91,43 @@ Cada portada declara su `canonical`, sus `hreflang` y su tarjeta. Ojo con dos co
 - **`formato.html` no se bloquea en `robots.txt`** aunque no queramos que salga en buscadores.
   Lleva su propio `noindex`, y para leerlo un buscador tiene que poder entrar en la página.
 
+## Nada sale de xtracto.app
+
+La portada dice que la app no puede enviar tus datos a ningún sitio. La web tiene que poder decir lo
+mismo de sí misma, y no podía: cargaba las tipografías de `fonts.gstatic.com`, que ve la IP de todo
+el que abre la página. Era lo primero que iba a señalar cualquiera que se pusiese a auditarla.
+
+```bash
+python3 fuentes/bajar.py      # Manrope + IBM Plex Mono, subconjunto latin, 53 KB
+```
+
+Ahora **el único origen externo de todo el sitio es el captcha de Turnstile**, y solo en las dos
+páginas del formulario. Cada página lo declara en su propia `Content-Security-Policy`, que en las
+que no llevan formulario es tan estrecha como suena:
+
+```
+default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline';
+font-src 'self'; base-uri 'none'; form-action 'none'
+```
+
+`'unsafe-inline'` en `style-src` está porque las páginas usan atributos `style=` a mano; el código
+en línea sí está prohibido del todo, y por eso `formato.js` y `formato.css` viven fuera de la
+página. GitHub Pages no deja poner cabeceras, así que la política va en un `<meta http-equiv>`: eso
+descarta `frame-ancestors`, que solo funciona como cabecera de verdad.
+
+> Lo único de todo esto que no he podido comprobar en un navegador es que Turnstile funcione bajo su
+> CSP. La política sigue lo que Cloudflare documenta —`script-src` y `frame-src` hacia
+> `challenges.cloudflare.com`— pero **conviene abrir el formulario con la consola delante la primera
+> vez** y mirar que no salte ninguna violación.
+
+### Accesibilidad
+
+- `--text-3` era `#646A6E`: 3,53:1 sobre el fondo, cuando WCAG AA pide 4,5:1 para texto pequeño. Lo
+  usaban los `h2` de sección, las etiquetas del formulario, las ayudas, el pie y el selector de
+  idioma, o sea casi todo el texto pequeño. Ahora es `#7A8084`, 4,85:1.
+- El foco de teclado se ve: un anillo de 2px con `:focus-visible`. Antes los campos hacían
+  `outline:none` y solo cambiaba un borde de 1px que sobre fondo oscuro no se distingue.
+
 ## Recepción de formatos
 
 Cuando la app no reconoce el aviso de un banco, ofrece compartir **la plantilla** del formato, ya sin
@@ -102,7 +141,12 @@ robot está para que eso se cumpla aunque alguien pegue el aviso en crudo por de
 
 ## Formulario de envío sin registro
 
-`formato.html` deja enviar la plantilla de un aviso **sin cuenta de GitHub**. El formulario llama a
+`formato.html` y `format.html` dejan enviar la plantilla de un aviso **sin cuenta de GitHub**.
+
+> En la página inglesa, el `value` de cada tipo de operación **va en español**. El Worker valida
+> contra una lista cerrada de valores en español y es el que acaba escribiendo el issue: traducir
+> los `value` haría que se rechazara todo envío desde esa página.
+ El formulario llama a
 `https://api.xtracto.app/formato`, un Cloudflare Worker (`worker/`) que valida, filtra y crea el
 issue con un token propio.
 

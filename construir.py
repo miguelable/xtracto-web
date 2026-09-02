@@ -18,6 +18,7 @@ CABECERA = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
 <title>Política de privacidad — Xtracto</title>
 <meta name="robots" content="index">
 <link rel="canonical" href="https://xtracto.app/privacidad.html">
@@ -31,13 +32,12 @@ CABECERA = """<!doctype html>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
 <div class="envoltorio" style="padding-top:40px;padding-bottom:64px">
+<div class="idiomas" style="padding-top:0"><a href="#es">Español</a> · <a href="#en">English</a></div>
 <p><a href="index.html">&larr; Xtracto</a></p>
 """
 
@@ -65,8 +65,15 @@ def en_linea(texto: str) -> str:
     return texto
 
 
+# La política lleva la versión española y a continuación la inglesa, cada una bajo su propio `# `.
+# Numerar los <h1> en ese orden da un ancla estable a la que enlazar desde las páginas en inglés,
+# sin depender de cómo esté redactado el titular.
+IDIOMAS = ["es", "en"]
+
+
 def convertir(markdown: str) -> str:
     salida, tabla, parrafo, lista, cita = [], [], [], False, False
+    titulos = 0
 
     def volcar_parrafo():
         # El markdown va con saltos de línea duros a los 100 caracteres. Sin unirlos, cada línea
@@ -112,7 +119,9 @@ def convertir(markdown: str) -> str:
             cerrar()
         elif cruda.startswith("# "):
             cerrar()
-            salida.append(f"<h1 style='font-size:32px'>{en_linea(cruda[2:])}</h1>")
+            ancla = IDIOMAS[titulos] if titulos < len(IDIOMAS) else f"parte-{titulos + 1}"
+            titulos += 1
+            salida.append(f"<h1 id='{ancla}' style='font-size:32px'>{en_linea(cruda[2:])}</h1>")
         elif cruda.startswith("## "):
             cerrar()
             salida.append(f"<h3 style='margin-top:34px'>{en_linea(cruda[3:])}</h3>")

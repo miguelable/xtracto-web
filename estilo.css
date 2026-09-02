@@ -1,4 +1,33 @@
 /*
+ * Las tipografías se sirven desde aquí, no desde Google.
+ *
+ * No es por velocidad, aunque también: es que la portada dice que la app no puede enviar tus datos
+ * a ningún sitio, y la propia página que lo decía le pedía las tipografías a fonts.gstatic.com,
+ * que ve la IP de todo el que la abre. Era la primera incoherencia que iba a señalar cualquiera
+ * que se pusiese a auditar la web, y con razón.
+ *
+ * Se bajan con `python3 fuentes/bajar.py`. Solo el subconjunto latin: el sitio está en español y
+ * en inglés. Lo que no esté en la fuente (✓, ✕, ←) cae a la del sistema, igual que ya pasaba.
+ */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 200 800;          /* variable: un solo fichero para todos los pesos */
+  font-display: swap;
+  src: url('fuentes/manrope.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('fuentes/ibm-plex-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url('fuentes/ibm-plex-mono-500.woff2') format('woff2');
+}
+
+/*
  * Mismos tokens que la app (portados a su vez del Quality Test): grises fríos de hue 240, un solo
  * acento, tarjetas planas con borde de 1px. Si cambia la paleta de la app, cambia aquí a mano.
  */
@@ -10,7 +39,7 @@
   --border: #252A2D;
   --text-1: #ECEFF1;
   --text-2: #999FA4;
-  --text-3: #646A6E;
+  --text-3: #7A8084;   /* 4,85:1 sobre el fondo: WCAG AA */
   --accent: #00AEE9;
   --success: #35C177;
   --warn: #E6AC3D;
@@ -124,6 +153,15 @@ ul.limpia li .marca-item { flex: 0 0 20px; }
   padding: 16px 18px; border-radius: 0 10px 10px 0;
 }
 .aviso p:last-child { margin-bottom: 0; }
+
+/* El foco de teclado tiene que verse. Sin esto, quien navegue con el tabulador no sabe dónde está:
+   en los campos del formulario solo cambiaba el borde de 1px, que sobre fondo oscuro no se aprecia.
+   :focus-visible y no :focus para no pintarle el anillo a quien llega con el ratón. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }

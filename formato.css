@@ -1,0 +1,27 @@
+/*
+ * Estilos del formulario de envío de formatos. Van aparte y no dentro de la página por dos motivos:
+ * los comparten formato.html y format.html, y una hoja embebida obligaría a abrirle la mano a
+ * 'unsafe-inline' en la CSP.
+ */
+label { display:block; font-size:13px; text-transform:uppercase; letter-spacing:1.1px;
+        color:var(--text-3); font-weight:700; margin:0 0 8px; }
+input, select, textarea {
+  width:100%; background:var(--bg-input); color:var(--text-1);
+  border:1px solid var(--border); border-radius:10px; padding:12px 14px;
+  font-family:'Manrope',sans-serif; font-size:16px;
+}
+textarea { font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.6;
+           min-height:150px; resize:vertical; }
+/* Se cambia el borde, pero sin `outline:none`: el anillo de foco de estilo.css tiene que seguir
+   viéndose para quien navega con el tabulador. */
+input:focus, select:focus, textarea:focus { border-color:var(--accent); }
+.campo { margin-bottom:26px; }
+.ayuda { font-size:13.5px; color:var(--text-3); margin:8px 0 0; }
+.alerta { border-radius:10px; padding:12px 14px; font-size:14px; margin-top:10px; display:none; }
+.alerta.mal { background:rgba(241,77,76,.1); border:1px solid rgba(241,77,76,.4);
+              color:#F14D4C; display:block; }
+.alerta.bien { background:rgba(53,193,119,.1); border:1px solid rgba(53,193,119,.4);
+               color:#35C177; display:block; }
+.oculto { position:absolute; left:-9999px; opacity:0; height:0; }
+button[type=submit] { border:0; cursor:pointer; font-family:'Manrope',sans-serif; }
+button[disabled] { opacity:.5; cursor:not-allowed; }

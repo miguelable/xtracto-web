@@ -6,6 +6,7 @@
 <title>Enviar el formato de tu banco — Xtracto</title>
 <meta name="description" content="Envía la plantilla del aviso que Xtracto no reconoce. Sin registrarte y sin mandar ni un dato tuyo.">
 <meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src https://api.xtracto.app https://challenges.cloudflare.com; base-uri 'none'; form-action 'none'">
 <meta property="og:title" content="Enviar el formato de tu banco — Xtracto">
 <meta property="og:description" content="Envía la plantilla del aviso que Xtracto no reconoce. Sin registrarte y sin mandar ni un dato tuyo.">
 <meta property="og:image" content="https://xtracto.app/og.png">
@@ -13,34 +14,16 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="formato.css">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<style>
-  label { display:block; font-size:13px; text-transform:uppercase; letter-spacing:1.1px;
-          color:var(--text-3); font-weight:700; margin:0 0 8px; }
-  input, select, textarea {
-    width:100%; background:var(--bg-input); color:var(--text-1);
-    border:1px solid var(--border); border-radius:10px; padding:12px 14px;
-    font-family:'Manrope',sans-serif; font-size:16px;
-  }
-  textarea { font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.6; min-height:150px; resize:vertical; }
-  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--accent); }
-  .campo { margin-bottom:26px; }
-  .ayuda { font-size:13.5px; color:var(--text-3); margin:8px 0 0; }
-  .alerta { border-radius:10px; padding:12px 14px; font-size:14px; margin-top:10px; display:none; }
-  .alerta.mal { background:rgba(241,77,76,.1); border:1px solid rgba(241,77,76,.4); color:#F14D4C; display:block; }
-  .alerta.bien { background:rgba(53,193,119,.1); border:1px solid rgba(53,193,119,.4); color:#35C177; display:block; }
-  .oculto { position:absolute; left:-9999px; opacity:0; height:0; }
-  button[type=submit] { border:0; cursor:pointer; font-family:'Manrope',sans-serif; }
-  button[disabled] { opacity:.5; cursor:not-allowed; }
-</style>
+<script src="formato.js" defer></script>
 </head>
 <body>
 
 <div class="envoltorio" style="padding-top:32px">
+  <div class="idiomas"><a href="formato.html" class="activo">Español</a> · <a href="format.html">English</a></div>
   <p><a href="index.html">&larr; Xtracto</a></p>
 
   <h1 style="font-size:32px;margin-bottom:12px">Envía el formato de tu banco</h1>
@@ -115,99 +98,6 @@
     </p>
   </form>
 </div>
-
-<script>
-(function () {
-  const form = document.getElementById('formulario');
-  const plantilla = document.getElementById('plantilla');
-  const avisoCifras = document.getElementById('avisoCifras');
-  const resultado = document.getElementById('resultado');
-  const boton = document.getElementById('enviar');
-
-  // Prellenado desde la app: xtracto.app/formato.html?paquete=...&plantilla=...
-  const params = new URLSearchParams(location.search);
-  for (const campo of ['entidad', 'paquete', 'plantilla']) {
-    const valor = params.get(campo);
-    if (valor) document.getElementById(campo).value = valor;
-  }
-
-  // Aviso en vivo. Esto es comodidad para quien escribe, NO la defensa: la comprobación que manda
-  // es la del servidor, porque cualquiera puede saltarse el JavaScript de una página.
-  const revisarCifras = () => {
-    const cifras = (plantilla.value.match(/\d/g) || []).length;
-    if (cifras > 0) {
-      avisoCifras.className = 'alerta mal';
-      avisoCifras.textContent = 'Hay ' + cifras + ' cifra(s) en el texto. Sustitúyelas por marcadores antes de enviarlo.';
-    } else {
-      avisoCifras.className = 'alerta';
-      avisoCifras.textContent = '';
-    }
-    return cifras === 0;
-  };
-  plantilla.addEventListener('input', revisarCifras);
-  if (plantilla.value) revisarCifras();
-
-  const MENSAJES = {
-    captcha: 'No se pudo verificar que no eres un robot. Recarga la página e inténtalo otra vez.',
-    limite: 'Has enviado varios formatos en poco tiempo. Prueba dentro de un rato.',
-    plantilla_con_cifras: 'La plantilla lleva números. Sustitúyelos por marcadores.',
-    plantilla_corta: 'La plantilla es demasiado corta.',
-    paquete: 'El identificador de la app no tiene la forma esperada (algo como com.ejemplo.banca).',
-    entidad: 'Falta el nombre del banco o de la aplicación.',
-    tipo: 'Elige qué tipo de operación es.',
-  };
-
-  form.addEventListener('submit', async (evento) => {
-    evento.preventDefault();
-    resultado.className = 'alerta';
-
-    if (!revisarCifras()) {
-      resultado.className = 'alerta mal';
-      resultado.textContent = MENSAJES.plantilla_con_cifras;
-      return;
-    }
-
-    const captcha = form.querySelector('[name="cf-turnstile-response"]');
-    boton.disabled = true;
-    boton.textContent = 'Enviando…';
-
-    try {
-      const respuesta = await fetch('https://api.xtracto.app/formato', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          entidad: document.getElementById('entidad').value,
-          paquete: document.getElementById('paquete').value,
-          plantilla: plantilla.value,
-          tipo: document.getElementById('tipo').value,
-          web: document.getElementById('web').value,
-          turnstile: captcha ? captcha.value : '',
-        }),
-      });
-      const datos = await respuesta.json();
-
-      if (datos.ok) {
-        form.style.display = 'none';
-        resultado.className = 'alerta bien';
-        resultado.style.display = 'block';
-        resultado.textContent = '¡Recibido, gracias! Si tu banco acaba soportado, podrás recuperar los avisos que ya tengas guardados con el botón «Reprocesar» de Ajustes.';
-        form.parentNode.appendChild(resultado);
-      } else {
-        resultado.className = 'alerta mal';
-        resultado.textContent = MENSAJES[datos.motivo] || 'No se pudo enviar. Inténtalo más tarde.';
-        boton.disabled = false;
-        boton.textContent = 'Enviar el formato';
-        if (window.turnstile) window.turnstile.reset();
-      }
-    } catch (e) {
-      resultado.className = 'alerta mal';
-      resultado.textContent = 'No se pudo conectar. Revisa tu conexión e inténtalo otra vez.';
-      boton.disabled = false;
-      boton.textContent = 'Enviar el formato';
-    }
-  });
-})();
-</script>
 
 </body>
 </html>

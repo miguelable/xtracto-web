@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
 <title>Xtracto — your spending records itself, and never leaves your phone</title>
 <meta name="description" content="Xtracto reads your bank alerts and records your spending. No cloud, no accounts, no internet permission.">
 <link rel="canonical" href="https://xtracto.app/en.html">
@@ -24,9 +25,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="estilo.css">
 <script type="application/ld+json">
 {
@@ -223,7 +222,7 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
       the form with everything prepared, or you pick any other route from the system share sheet.
     </p>
     <p style="margin-top:22px">
-      <a class="boton secundario" href="formato.html">Send my bank's format</a>
+      <a class="boton secundario" href="format.html">Send my bank's format</a>
     </p>
   </div>
 </section>
