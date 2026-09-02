@@ -36,15 +36,25 @@ header.principal { padding: 96px 0 72px; text-align: center; }
 
 .marca {
   display: inline-flex; align-items: center; gap: 14px;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
-.marca .icono {
-  width: 64px; height: 64px; border-radius: 18px;
-  background: linear-gradient(135deg, #161B1E, #0A0E10);
-  border: 1px solid var(--border);
-  display: grid; place-items: center;
+
+/* Estado del proyecto. Mientras la app no esté publicada, la portada lo dice antes de que nadie
+   se lea tres secciones sobre cómo verificar un APK que todavía no puede instalar. */
+.chip {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(230, 172, 61, 0.09);
+  border: 1px solid rgba(230, 172, 61, 0.35);
+  color: var(--warn);
+  font-size: 12.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.1px;
+  padding: 5px 14px; border-radius: 999px;
+  margin: 0 0 20px;
 }
-.marca .icono svg { width: 34px; height: 34px; }
+.chip .punto { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); }
+/* La marca ya tiene silueta propia: no necesita la baldosa con borde que le hacía de icono al
+   aspa simple de antes. Se genera con marca/generar.py, no se edita a mano. */
+.marca .icono { width: 56px; height: 56px; display: block; }
 .marca .nombre { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
 
 h1 {
@@ -130,6 +140,13 @@ a:hover { text-decoration: underline; }
   background: transparent; color: var(--text-1);
   border: 1px solid var(--border);
 }
+/* No es un enlace: no lleva a ningún sitio porque todavía no hay a dónde ir. */
+.boton.inactivo {
+  background: var(--bg-active); color: var(--text-2);
+  border: 1px solid var(--border);
+  cursor: default;
+}
+.boton.inactivo:hover { filter: none; }
 
 footer {
   border-top: 1px solid var(--border);

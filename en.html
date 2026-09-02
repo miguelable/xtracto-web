@@ -5,14 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Xtracto — your spending records itself, and never leaves your phone</title>
 <meta name="description" content="Xtracto reads your bank alerts and records your spending. No cloud, no accounts, no internet permission.">
-<link rel="canonical" href="https://xtracto.app/">
-<meta property="og:url" content="https://xtracto.app/">
+<link rel="canonical" href="https://xtracto.app/en.html">
+<link rel="alternate" hreflang="es" href="https://xtracto.app/">
+<link rel="alternate" hreflang="en" href="https://xtracto.app/en.html">
+<link rel="alternate" hreflang="x-default" href="https://xtracto.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Xtracto">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:url" content="https://xtracto.app/en.html">
 <meta property="og:title" content="Xtracto — your spending records itself">
 <meta property="og:description" content="Reads your bank alerts and records your spending. No network permission: it cannot send your data anywhere.">
+<meta property="og:image" content="https://xtracto.app/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Xtracto, in development. Your spending records itself and never leaves your phone.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilo.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://xtracto.app/#sitio",
+      "url": "https://xtracto.app/",
+      "name": "Xtracto",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "MobileApplication",
+      "name": "Xtracto",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Android",
+      "url": "https://xtracto.app/",
+      "image": "https://xtracto.app/marca/icono-play-512.png",
+      "permissions": "Notification access",
+      "privacyPolicy": "https://xtracto.app/privacidad.html",
+      "description": "Reads the alerts your bank sends you and turns them into transactions. It declares no internet permission, so it cannot send anything to any server."
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -23,14 +63,10 @@
 <header class="principal">
   <div class="envoltorio">
     <div class="marca">
-      <span class="icono">
-        <svg viewBox="0 0 108 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M38 38 L70 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 38 L38 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
-        </svg>
-      </span>
+      <img class="icono" src="marca/logo.svg" width="56" height="56" alt="">
       <span class="nombre">Xtracto</span>
     </div>
+    <p class="chip"><span class="punto"></span>In development</p>
     <h1>Your spending records itself.<br>And <em>never leaves your phone</em>.</h1>
     <p class="entradilla">
       When your bank notifies a card payment or a direct debit, Xtracto reads that alert and turns it
@@ -87,9 +123,9 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
   <div class="envoltorio">
     <h2>Check it yourself</h2>
     <p>
-      You do not have to take this page's word for it, or know how to read code: the claim that
-      matters —that the app <strong>cannot connect to the internet</strong>— can be checked against
-      the very file Google Play installs on your phone, in a minute, with official Android tools.
+      You will not have to take this page's word for it, or know how to read code: the claim that
+      matters —that the app <strong>cannot connect to the internet</strong>— will be checkable against
+      the very file installed on your phone, in a minute, with official Android tools.
     </p>
     <pre><span class="ok"># 1.</span> Find where the app is installed on your phone
 adb shell pm path app.xtracto
@@ -106,10 +142,11 @@ aapt2 dump permissions xtracto.apk</pre>
     <div class="tarjeta" style="margin-top:22px">
       <h3>Without installing anything</h3>
       <p style="margin-bottom:0">
-        On the Google Play listing, under <strong>Data safety</strong>, Google publishes what the app
-        declares about what it collects and shares — and checks that declaration against its own
-        analysis. And under <strong>Settings → Apps → Xtracto → Permissions</strong>, your own phone
-        shows you the real list, with no middleman.
+        Once the app is published, its Google Play listing will carry the <strong>Data safety</strong>
+        section, where Google publishes what an app declares about what it collects and shares and
+        checks that declaration against its own analysis. And under
+        <strong>Settings → Apps → Xtracto → Permissions</strong>, your own phone will show you the
+        real list, with no middleman.
       </p>
     </div>
   </div>
@@ -193,9 +230,19 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
 
 <section>
   <div class="envoltorio">
-    <h2>Download</h2>
+    <h2>Availability</h2>
     <p>
-      <a class="boton" href="#">Get it on Google Play</a>
+      Xtracto is <strong>still in development</strong> and cannot be downloaded yet. What is left is
+      recognising the alert formats of more banks and completing the Google Play release.
+      <strong>When it is ready, it will be available to everyone.</strong>
+    </p>
+    <p>
+      In the meantime, the most useful thing you can do is
+      <a href="formato.html">send the format of your bank's alerts</a>: every template that arrives
+      is one more bank recognised on release day.
+    </p>
+    <p style="margin-top:22px">
+      <span class="boton inactivo" aria-disabled="true">Coming soon to Google Play</span>
       <a class="boton secundario" href="privacidad.html">Privacy policy</a>
     </p>
     <div class="aviso" style="margin-top:24px">

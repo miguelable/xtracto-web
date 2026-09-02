@@ -6,13 +6,53 @@
 <title>Xtracto — tus gastos se apuntan solos, sin salir del móvil</title>
 <meta name="description" content="Xtracto lee los avisos de tu banco y apunta tus gastos. Sin nube, sin cuentas y sin permiso de acceso a internet.">
 <link rel="canonical" href="https://xtracto.app/">
+<link rel="alternate" hreflang="es" href="https://xtracto.app/">
+<link rel="alternate" hreflang="en" href="https://xtracto.app/en.html">
+<link rel="alternate" hreflang="x-default" href="https://xtracto.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Xtracto">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_GB">
 <meta property="og:url" content="https://xtracto.app/">
 <meta property="og:title" content="Xtracto — tus gastos se apuntan solos">
 <meta property="og:description" content="Lee los avisos de tu banco y apunta tus gastos. Sin permiso de red: no puede enviar tus datos a ningún sitio.">
+<meta property="og:image" content="https://xtracto.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Xtracto, en desarrollo. Tus gastos se apuntan solos y no salen del móvil.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilo.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://xtracto.app/#sitio",
+      "url": "https://xtracto.app/",
+      "name": "Xtracto",
+      "inLanguage": "es"
+    },
+    {
+      "@type": "MobileApplication",
+      "name": "Xtracto",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Android",
+      "url": "https://xtracto.app/",
+      "image": "https://xtracto.app/marca/icono-play-512.png",
+      "permissions": "Acceso a las notificaciones",
+      "privacyPolicy": "https://xtracto.app/privacidad.html",
+      "description": "Lee los avisos que te manda tu banco y los convierte en movimientos. No declara permiso de acceso a internet, así que no puede enviar nada a ningún servidor."
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -23,14 +63,10 @@
 <header class="principal">
   <div class="envoltorio">
     <div class="marca">
-      <span class="icono">
-        <svg viewBox="0 0 108 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M38 38 L70 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 38 L38 70" stroke="#00AEE9" stroke-width="11" stroke-linecap="round"/>
-        </svg>
-      </span>
+      <img class="icono" src="marca/logo.svg" width="56" height="56" alt="">
       <span class="nombre">Xtracto</span>
     </div>
+    <p class="chip"><span class="punto"></span>En desarrollo</p>
     <h1>Tus gastos se apuntan solos.<br>Y <em>no salen del móvil</em>.</h1>
     <p class="entradilla">
       Cuando tu banco te avisa de una compra o de un recibo, Xtracto lee ese aviso y lo convierte en
@@ -88,8 +124,8 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
     <h2>Verifícalo tú mismo</h2>
     <p>
       No hace falta que te fíes de esta página, ni que sepas leer código: la afirmación importante
-      —que la app <strong>no puede conectarse a internet</strong>— se comprueba sobre el archivo que
-      Google Play te instala en el móvil, en un minuto y con herramientas oficiales de Android.
+      —que la app <strong>no puede conectarse a internet</strong>— se podrá comprobar sobre el mismo
+      archivo que se instale en tu móvil, en un minuto y con herramientas oficiales de Android.
     </p>
     <pre><span class="ok"># 1.</span> Averigua dónde está instalada la app en tu móvil
 adb shell pm path app.xtracto
@@ -106,10 +142,11 @@ aapt2 dump permissions xtracto.apk</pre>
     <div class="tarjeta" style="margin-top:22px">
       <h3>Sin instalar nada</h3>
       <p style="margin-bottom:0">
-        En la ficha de Google Play, en <strong>Seguridad de los datos</strong>, Google publica lo que
-        la app declara sobre qué recoge y qué comparte — y contrasta esa declaración con lo que
-        encuentra al analizarla. Y en <strong>Ajustes → Aplicaciones → Xtracto → Permisos</strong>, tu
-        propio teléfono te enseña la lista real, sin intermediarios.
+        En cuanto la app esté publicada, su ficha de Google Play incluirá el apartado
+        <strong>Seguridad de los datos</strong>, donde Google publica lo que la app declara sobre qué
+        recoge y qué comparte y lo contrasta con lo que encuentra al analizarla. Y en
+        <strong>Ajustes → Aplicaciones → Xtracto → Permisos</strong>, tu propio teléfono te enseñará
+        la lista real, sin intermediarios.
       </p>
     </div>
   </div>
@@ -193,9 +230,19 @@ en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span c
 
 <section>
   <div class="envoltorio">
-    <h2>Descargar</h2>
+    <h2>Disponibilidad</h2>
     <p>
-      <a class="boton" href="#">Consíguela en Google Play</a>
+      Xtracto <strong>todavía está en desarrollo</strong> y aún no se puede descargar. Queda por
+      afinar el reconocimiento de los avisos de más entidades y por completar la publicación en
+      Google Play. <strong>Cuando esté lista, estará disponible para todo el mundo.</strong>
+    </p>
+    <p>
+      Mientras tanto, lo que más ayuda es
+      <a href="formato.html">enviar el formato de los avisos de tu banco</a>: cada plantilla que
+      llega es una entidad más reconocida el día que se publique.
+    </p>
+    <p style="margin-top:22px">
+      <span class="boton inactivo" aria-disabled="true">Próximamente en Google Play</span>
       <a class="boton secundario" href="privacidad.html">Política de privacidad</a>
     </p>
     <div class="aviso" style="margin-top:24px">

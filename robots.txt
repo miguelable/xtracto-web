@@ -1,0 +1,10 @@
+# Todo el sitio es público y se puede indexar.
+#
+# formato.html no se bloquea aquí a propósito, aunque no queramos que salga en los buscadores:
+# lleva su propio <meta name="robots" content="noindex"> y, para leerlo, un buscador tiene que
+# poder entrar. Bloquearlo en este fichero conseguiría lo contrario de lo que parece.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://xtracto.app/sitemap.xml

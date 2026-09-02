@@ -20,8 +20,15 @@ la web y la automatización de los envíos.
 | `index.html` | Portada en español |
 | `en.html` | Portada en inglés |
 | `privacidad.html` | Política de privacidad — **generada**, no editar a mano |
+| `formato.html` | Formulario de envío sin cuenta de GitHub |
+| `404.html` | Página de dirección inexistente. GitHub Pages la sirve sola |
 | `estilo.css` | Los mismos tokens de diseño que la app |
+| `robots.txt` | Abre todo el sitio a los buscadores |
+| `sitemap.py` | Regenera `sitemap.xml` leyendo las páginas y preguntándole las fechas a git |
 | `construir.py` | Regenera `privacidad.html` desde el `PRIVACY.md` del repo de la app |
+| `marca/generar.py` | Regenera la marca en todos sus tamaños — **el único sitio donde se edita** |
+| `marca/tarjeta.py` | Regenera `og.png` y `og-en.png`, las tarjetas de los enlaces compartidos |
+| `marca/`, `favicon.*`, `apple-touch-icon.png`, `og*.png` | Piezas generadas. No tocar a mano |
 
 La política de privacidad tiene un solo original, el `PRIVACY.md` del proyecto de la app, para que
 lo que dice el repositorio y lo que lee Google no puedan divergir. Tras editarlo:
@@ -29,6 +36,58 @@ lo que dice el repositorio y lo que lee Google no puedan divergir. Tras editarlo
 ```bash
 python3 construir.py ../xtracto/PRIVACY.md
 ```
+
+## La marca
+
+La marca vive en `marca/generar.py` como geometría, no como imagen: cuatro cuadrados girados 45º
+cuyas aristas interiores dejan justo el hueco del rombo central, más el destello. De ahí salen
+todas las piezas, y por eso da igual el tamaño al que se pidan.
+
+```bash
+python3 marca/generar.py     # SVG siempre; los PNG y el .ico si hay cairosvg y pillow
+```
+
+| Pieza | Para qué |
+|---|---|
+| `marca/logo.svg` | La marca en la web, a 56 px en la portada |
+| `favicon.svg` + `favicon.ico` | Pestaña del navegador. El `.ico` lleva 16, 32 y 48 dentro |
+| `apple-touch-icon.png` | Cuando alguien añade la web a la pantalla de inicio en iOS |
+| `marca/icono-app-frente.svg` + `marca/icono-app-fondo.svg` | Icono adaptativo de Android. Se importan con *Import Vector Asset* de Android Studio |
+| `marca/icono-play-512.png` | El icono de 512×512 de la ficha de Google Play |
+| `marca/icono-app-432.png` | Repuesto rasterizado por si el conversor a VectorDrawable se atraganta |
+| `marca/original.png` | El diseño de partida, del que se midió la geometría. No se usa |
+
+El icono de app va más pequeño dentro de su lienzo (65 %) porque Android recorta el icono adaptativo
+con una máscara distinta según el lanzador y solo garantiza los 66 dp centrales de 108.
+
+## Cuando alguien comparte un enlace
+
+`og.png` y `og-en.png` son lo que se ve al pegar una dirección de xtracto.app en WhatsApp, Slack,
+Mastodon o X. Se generan con la marca y la tipografía reales del sitio:
+
+```bash
+python3 marca/tarjeta.py     # se baja Manrope de Google Fonts a marca/.fuentes/ la primera vez
+```
+
+Las dos tarjetas llevan escrito **«En desarrollo»**. Un enlace compartido es lo primero que ve
+mucha gente, y no queremos que lleguen a la web esperando un botón de descarga que aún no existe.
+
+El sitemap tampoco se escribe a mano:
+
+```bash
+python3 sitemap.py
+```
+
+Entra toda página `.html` de la raíz **salvo** las que lleven `noindex`, y el `<lastmod>` sale de la
+fecha del último commit que tocó cada fichero. Así marcar una página como no indexable la saca del
+sitemap sin tocar nada más, y ninguna fecha se queda mintiendo por olvido.
+
+Cada portada declara su `canonical`, sus `hreflang` y su tarjeta. Ojo con dos cosas al tocarlas:
+
+- **`en.html` tiene que canonicalizar a sí misma**, no a `/`. Si apunta a la portada española,
+  Google entiende que la inglesa es un duplicado y la deja fuera del índice.
+- **`formato.html` no se bloquea en `robots.txt`** aunque no queramos que salga en buscadores.
+  Lleva su propio `noindex`, y para leerlo un buscador tiene que poder entrar en la página.
 
 ## Recepción de formatos
 
