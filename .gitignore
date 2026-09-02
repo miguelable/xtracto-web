@@ -11,3 +11,5 @@ marca/.fuentes/
 
 # Manual de operaciones: cómo está montado y desplegado todo. Se queda en local.
 NOTAS-INTERNAS.md
+
+__pycache__/

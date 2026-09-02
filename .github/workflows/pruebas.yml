@@ -1,0 +1,36 @@
+# Ejecuta las pruebas del Worker y las invariantes del sitio en cada push y en cada pull request.
+#
+# El sitio se publica solo al empujar a main, sin build ni revisión: no hay ningún momento en el que
+# alguien mire si sigue todo en pie. Esto es ese momento.
+name: Pruebas
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # El KV y la API de GitHub van de mentira, así que esto no toca nada de producción ni
+      # necesita ningún secreto.
+      - name: Worker
+        run: node worker/pruebas.mjs
+
+      - name: Invariantes del sitio
+        run: python3 verificar.py
+
+      - name: Sintaxis del JavaScript de la página
+        run: node --check formato.js
+
+      - name: Sintaxis de los generadores
+        run: python3 -m py_compile construir.py sitemap.py verificar.py marca/generar.py marca/tarjeta.py fuentes/bajar.py

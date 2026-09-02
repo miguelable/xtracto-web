@@ -1,0 +1,8 @@
+{
+  "name": "xtracto-formatos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node pruebas.mjs"
+  }
+}
