@@ -27,7 +27,10 @@ RAIZ = Path(__file__).resolve().parent
 
 # Qué páginas son la misma en otro idioma. La primera de cada grupo es la que se ofrece como
 # x-default, es decir, la que ve quien llega sin un idioma preferido claro.
-GRUPOS = [{'es': 'index.html', 'en': 'en.html'}]
+GRUPOS = [
+    {'es': 'index.html', 'en': 'en.html'},
+    {'es': 'verificar-permisos.html', 'en': 'check-permissions.html'},
+]
 
 NOINDEX = re.compile(r'<meta\s+name="robots"\s+content="[^"]*noindex', re.I)
 

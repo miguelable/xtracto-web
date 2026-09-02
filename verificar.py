@@ -53,19 +53,23 @@ def referencias_resuelven():
 
 
 def canonicals_y_alternativas():
-    esperado = {'index.html': BASE, 'en.html': BASE + 'en.html',
-                'privacidad.html': BASE + 'privacidad.html'}
-    for f, url in esperado.items():
-        m = re.search(r'<link rel="canonical" href="([^"]+)"', texto(f))
+    """Toda página indexable tiene que canonicalizarse a sí misma. `en.html` apuntaba a la portada
+    española y Google la tomaba por duplicada: la página existía y no la encontraba nadie."""
+    for f in paginas():
+        t = texto(f)
+        if NOINDEX.search(t):
+            continue
+        suya = BASE if f == 'index.html' else BASE + f
+        m = re.search(r'<link rel="canonical" href="([^"]+)"', t)
         if not m:
             mal('canonical', f'{f} no declara ninguno')
-        elif m.group(1) != url:
-            mal('canonical', f'{f} apunta a {m.group(1)} y debería apuntar a {url}')
+        elif m.group(1) != suya:
+            mal('canonical', f'{f} apunta a {m.group(1)} y debería apuntar a sí misma, {suya}')
 
-    for f in ('index.html', 'en.html'):
-        idiomas = set(re.findall(r'<link rel="alternate" hreflang="([^"]+)"', texto(f)))
-        if idiomas != {'es', 'en', 'x-default'}:
-            mal('hreflang', f'{f} declara {sorted(idiomas) or "ninguno"}')
+        # Si declara traducciones, que las declare completas: las tres o ninguna.
+        idiomas = set(re.findall(r'<link rel="alternate" hreflang="([^"]+)"', t))
+        if idiomas and idiomas != {'es', 'en', 'x-default'}:
+            mal('hreflang', f'{f} declara {sorted(idiomas)} y faltan las demás')
 
 
 def cabecera_de_la_politica():

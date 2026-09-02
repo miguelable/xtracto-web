@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo comprobar que una app no puede conectarse a internet</title>
+<meta name="description" content="Guía paso a paso con adb y aapt2 para ver los permisos reales de un APK. Por qué la pantalla de permisos de Android no sirve para esto.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="canonical" href="https://xtracto.app/verificar-permisos.html">
+<link rel="alternate" hreflang="es" href="https://xtracto.app/verificar-permisos.html">
+<link rel="alternate" hreflang="en" href="https://xtracto.app/check-permissions.html">
+<link rel="alternate" hreflang="x-default" href="https://xtracto.app/verificar-permisos.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Xtracto">
+<meta property="og:url" content="https://xtracto.app/verificar-permisos.html">
+<meta property="og:title" content="Cómo comprobar que una app no puede conectarse a internet">
+<meta property="og:description" content="Guía paso a paso con adb y aapt2 para ver los permisos reales de un APK. Por qué la pantalla de permisos de Android no sirve para esto.">
+<meta property="og:image" content="https://xtracto.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="envoltorio">
+  <div class="idiomas"><a href="verificar-permisos.html" class="activo">Español</a> · <a href="check-permissions.html">English</a></div>
+</div>
+
+<header class="principal" style="padding:40px 0 48px;text-align:left">
+  <div class="envoltorio">
+    <p><a href="index.html">&larr; Xtracto</a></p>
+    <h1 style="font-size:clamp(28px,5vw,40px);margin-top:18px">Cómo comprobar que una app no puede
+    conectarse a internet</h1>
+    <p class="entradilla" style="margin:0">
+      Una política de privacidad es una promesa. Esto es una comprobación: en un minuto, con las
+      herramientas oficiales de Android, sobre el archivo que está instalado en tu móvil.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="envoltorio">
+    <h2>Por qué el permiso de internet lo decide todo</h2>
+    <p>
+      En Android, una aplicación que no declara <code>android.permission.INTERNET</code> no puede
+      abrir una conexión de red. No es que se porte bien: es que el sistema operativo rechaza el
+      intento. Da igual lo que haga el código, lo que diga la empresa o quién sea el dueño mañana.
+    </p>
+    <p>
+      Por eso esta comprobación vale más que cualquier promesa. <strong>Si una app que maneja datos
+      sensibles no declara ese permiso, no hay forma de que salgan del teléfono.</strong> Y si lo
+      declara, no significa que haga nada malo —casi todas lo necesitan—, pero entonces la privacidad
+      vuelve a depender de que te fíes.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Lo que no sirve para comprobarlo</h2>
+    <div class="aviso">
+      <p><strong>La pantalla de permisos de tu móvil no lo enseña.</strong> En
+      <em>Ajustes → Aplicaciones → Permisos</em>, Android solo lista los permisos
+      <strong>peligrosos</strong>: los que se conceden en tiempo de ejecución, como la cámara, la
+      ubicación o los contactos. <code>INTERNET</code> es un permiso <strong>normal</strong>: se
+      concede al instalar y <strong>no aparece nunca en esa pantalla, en ninguna aplicación</strong>.
+      Que no lo veas ahí no demuestra absolutamente nada.</p>
+    </div>
+    <p style="margin-top:18px">
+      Tampoco sirve la política de privacidad, ni la ficha de la tienda, ni que la app «funcione en
+      modo avión». Todo eso es coherente tanto con una app que no puede conectarse como con una que
+      puede y ese día no lo hizo.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Lo más rápido: preguntarle al sistema</h2>
+    <p>
+      Necesitas un ordenador con las <a href="https://developer.android.com/tools/releases/platform-tools"
+      rel="noopener">Platform Tools de Android</a> —son oficiales y gratuitas— y activar la
+      <strong>depuración por USB</strong> en tu móvil, en las opciones de desarrollador.
+    </p>
+    <pre><span class="ok">$</span> adb shell dumpsys package app.xtracto | grep -A 30 "requested permissions"
+
+    requested permissions:
+      app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</pre>
+    <p>
+      Esa lista es la que el sistema tiene registrada, e incluye los permisos normales. Si
+      <code>android.permission.INTERNET</code> no está, la app no puede salir a la red.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Lo más riguroso: preguntarle al archivo</h2>
+    <p>
+      Lo anterior te dice lo que cree el sistema. Esto te lo dice el propio archivo que se instaló,
+      que es la fuente. Son tres órdenes:
+    </p>
+    <pre><span class="ok"># 1.</span> Averigua dónde está instalada
+adb shell pm path app.xtracto
+
+<span class="ok"># 2.</span> Tráete el archivo al ordenador
+adb pull /data/app/.../base.apk app.apk
+
+<span class="ok"># 3.</span> Pregúntale qué permisos declara
+aapt2 dump permissions app.apk</pre>
+    <p>
+      <code>aapt2</code> viene con las <em>build-tools</em> del SDK de Android. Si tienes Android
+      Studio instalado, también sirve <code>apkanalyzer manifest permissions app.apk</code>, que hace
+      lo mismo y suele estar más a mano.
+    </p>
+    <div class="aviso">
+      <p><strong>Ojo con los APK divididos.</strong> Google Play no entrega un archivo, entrega un
+      <em>app bundle</em>: el paso 1 puede devolverte varias rutas —un <code>base.apk</code> y varios
+      <code>split_config.*.apk</code>—. El manifiesto que manda es el del base, pero si quieres ser
+      exhaustivo, tráetelos todos y míralos uno a uno.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Cómo leer lo que sale</h2>
+    <div class="rejilla" style="gap:14px">
+      <div class="tarjeta">
+        <h3><code>android.permission.INTERNET</code></h3>
+        <p style="margin-bottom:0">Puede abrir conexiones de red. <strong>Es el que importa.</strong>
+        Sin él, cualquier intento de conectarse falla en el sistema.</p>
+      </div>
+      <div class="tarjeta">
+        <h3><code>ACCESS_NETWORK_STATE</code></h3>
+        <p style="margin-bottom:0">Solo permite <em>consultar</em> si hay conexión. No permite usarla.
+        Suele acompañar a <code>INTERNET</code>, pero por sí solo no abre nada.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Permisos que terminan en <code>DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</code></h3>
+        <p style="margin-bottom:0">Los genera automáticamente AndroidX, la librería base de Android.
+        Llevan el nombre del paquete delante, son internos de la aplicación y no dan acceso a nada.</p>
+      </div>
+      <div class="tarjeta">
+        <h3><code>BIND_NOTIFICATION_LISTENER_SERVICE</code></h3>
+        <p style="margin-bottom:0">No es un permiso que la app pida, sino el que <em>exige</em> a
+        Android para que solo el sistema pueda arrancar su servicio de notificaciones. El acceso de
+        verdad se lo das tú a mano, en los ajustes, y puedes retirarlo cuando quieras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Sin ordenador</h2>
+    <p>
+      Hay aplicaciones en Google Play que listan los permisos de todo lo que tienes instalado,
+      leyéndolos del mismo registro del sistema, y ahí sí salen los permisos normales. Funcionan,
+      pero conviene ser consciente de la ironía: <strong>para no fiarte de una app estás instalando
+      otra</strong>. Si la comprobación te importa de verdad, hazla con <code>adb</code>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Compruébalo con Xtracto</h2>
+    <p>
+      Xtracto lee los avisos de tu banco y apunta tus gastos, y toda su promesa de privacidad se
+      apoya en esto. Cuando esté publicada, lo que tienes que ver es exactamente esto:
+    </p>
+    <pre><span class="ok">$</span> aapt2 dump permissions xtracto.apk
+
+package: app.xtracto
+uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pre>
+    <p>
+      Ese único permiso es el interno de AndroidX. <strong>No hay <code>INTERNET</code></strong>: no
+      es una política, es que el sistema no la dejaría. Si algún día aparece en esa lista, todo lo
+      que dice nuestra portada sería mentira y podrás demostrarlo en un minuto.
+    </p>
+    <p style="margin-top:22px">
+      <a class="boton secundario" href="index.html">Qué es Xtracto</a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="envoltorio">
+    <p>Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

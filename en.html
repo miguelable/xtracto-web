@@ -200,14 +200,19 @@ aapt2 dump permissions xtracto.apk</pre>
       If <code>android.permission.INTERNET</code> showed up in that list, the app could send your data
       somewhere and everything on this page would be a lie. It does not show up.
     </p>
+    <p style="margin-top:20px"><a class="boton secundario" href="check-permissions.html">How to check it, step by step</a></p>
     <div class="tarjeta" style="margin-top:22px">
       <h3>Without installing anything</h3>
       <p style="margin-bottom:0">
         Once the app is published, its Google Play listing will carry the <strong>Data safety</strong>
         section, where Google publishes what an app declares about what it collects and shares and
-        checks that declaration against its own analysis. And under
-        <strong>Settings → Apps → Xtracto → Permissions</strong>, your own phone will show you the
-        real list, with no middleman.
+        checks that declaration against its own analysis.
+      </p>
+      <p style="margin-bottom:0">
+        <strong>Your phone's permission screen is no good for this</strong>, and it is worth saying so:
+        Android only lists dangerous permissions there, and <code>INTERNET</code> is not one. It never
+        shows up on that screen, for any app, so its absence proves nothing.
+        <a href="check-permissions.html">Here is how to check it properly</a>.
       </p>
     </div>
   </div>
