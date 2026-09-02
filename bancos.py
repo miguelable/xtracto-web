@@ -18,23 +18,47 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
 
-# ('Nombre comercial', 'identificador.de.la.app', ['qué avisos reconoce'])
+# Los nombres de las operaciones, para no escribirlos dos veces ni desincronizar los idiomas.
+OPERACIONES = {
+    'compra':     {'es': 'Compra con tarjeta', 'en': 'Card payment'},
+    'recibo':     {'es': 'Recibo domiciliado', 'en': 'Direct debit'},
+    'devolucion': {'es': 'Pago cancelado', 'en': 'Cancelled payment'},
+}
+
+# ('Nombre comercial', 'identificador.de.la.app', [operaciones], {'es': nota, 'en': nota})
 #
-# El nombre es el que la gente teclea al buscar, no el nombre legal: «CaixaBank», no «CaixaBank,
-# S.A.». El identificador es el del paquete de Android, que es lo que de verdad distingue una app
-# de otra y ayuda a quien tiene varias del mismo grupo.
-SOPORTADOS: list[tuple[str, str, list[str]]] = [
-    # ('CaixaBank', 'com.caixabank.wallet', ['Compra con tarjeta', 'Recibo domiciliado', 'Bizum']),
+# **Aquí va solo lo que el parser interpreta de verdad**, no lo que archiva. La app guarda también
+# los avisos en crudo de otras aplicaciones financieras para poder añadir sus gramáticas más
+# adelante, pero esa lista no se publica por dos motivos: quien viera su banco ahí creería que ya
+# funciona, y son las apps instaladas en un teléfono concreto, así que decían de su dueño más de lo
+# que nadie necesita saber.
+#
+# El nombre es el que la gente teclea al buscar, no el legal. El identificador es el del paquete de
+# Android, que es lo que de verdad distingue una app de otra.
+SOPORTADOS: list[tuple[str, str, list[str], dict[str, str]]] = [
+    ('Caja Rural · Ruralvía', 'com.rsi.nba', ['compra', 'recibo'], {
+        'es': 'Las cajas rurales que operan con Ruralvía comparten esta aplicación, así que sirve '
+              'para todas ellas.',
+        'en': 'The Spanish rural banks that operate through Ruralvía share this application, so it '
+              'covers all of them.'}),
+    ('Google Wallet', 'com.google.android.apps.walletnfcrel', ['compra'], {
+        'es': 'Los pagos con el móvil, sea cual sea la tarjeta que tengas dentro.',
+        'en': 'Phone payments, whichever card you have inside.'}),
+    ('Trade Republic', 'de.traderepublic.app', ['compra', 'devolucion'], {
+        'es': 'Reconoce también el aviso de que un cobro se anula, para tachar el movimiento ya '
+              'registrado.',
+        'en': 'It also recognises the alert that a charge has been cancelled, to strike through the '
+              'movement already recorded.'}),
 ]
 
 TEXTOS = {
     'es': dict(
         fichero='bancos.html', otro='banks.html', lang='es', og='og.png',
-        titulo='Bancos que Xtracto reconoce',
+        titulo='Bancos y apps que Xtracto reconoce',
         desc='Lista de entidades cuyos avisos entiende Xtracto, con el identificador de cada app. '
              'Si el tuyo no está, puedes enviarnos el formato sin enviarnos tus datos.',
         volver='index.html', volver_txt='Xtracto',
-        h1='Bancos que Xtracto reconoce',
+        h1='Bancos y apps que Xtracto reconoce',
         entradilla='Xtracto lee los avisos que estas aplicaciones te mandan al móvil y los convierte '
                    'en movimientos. La lista crece con los formatos que envía la gente.',
         h2_lista='La lista', h2_falta='¿No está el tuyo?',
@@ -49,11 +73,11 @@ TEXTOS = {
              'Banking y no puede consultar tu saldo real: solo lee las notificaciones que ya recibes.'),
     'en': dict(
         fichero='banks.html', otro='bancos.html', lang='en', og='og-en.png',
-        titulo='Banks Xtracto recognises',
+        titulo='Banks and apps Xtracto recognises',
         desc='The banks whose alerts Xtracto understands, with each app identifier. If yours is not '
              'there, you can send us the format without sending us your data.',
         volver='en.html', volver_txt='Xtracto',
-        h1='Banks Xtracto recognises',
+        h1='Banks and apps Xtracto recognises',
         entradilla='Xtracto reads the alerts these applications send to your phone and turns them into '
                    'transactions. The list grows with the formats people send in.',
         h2_lista='The list', h2_falta='Yours is not there?',
@@ -149,11 +173,16 @@ CELDA = 'style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--
 def pagina(t):
     cabeceras = ''.join(f'<th {CELDA}>{html.escape(c)}</th>' for c in t['col'])
     filas = []
-    for nombre, paquete, operaciones in sorted(SOPORTADOS, key=lambda b: b[0].lower()):
+    idioma = t['lang']
+    for nombre, paquete, operaciones, nota in sorted(SOPORTADOS, key=lambda b: b[0].lower()):
+        ops = ', '.join(OPERACIONES[o][idioma] for o in operaciones)
+        # La nota va como segunda línea de la celda y no como cuarta columna: con cuatro, las tres
+        # primeras se estrangulaban y el nombre del banco salía partido en dos renglones.
+        apunte = f'<br><span class="apunte">{html.escape(nota[idioma])}</span>' if nota.get(idioma) else ''
         filas.append(
-            f'        <tr><td {CELDA}><strong>{html.escape(nombre)}</strong></td>'
+            f'        <tr><td {CELDA} class="entidad"><strong>{html.escape(nombre)}</strong></td>'
             f'<td {CELDA}><code>{html.escape(paquete)}</code></td>'
-            f'<td {CELDA}>{html.escape(", ".join(operaciones))}</td></tr>')
+            f'<td {CELDA}>{html.escape(ops)}{apunte}</td></tr>')
     return PLANTILLA.format(cabeceras=cabeceras, filas='\n'.join(filas),
                             act_es=' class="activo"' if t['lang'] == 'es' else '',
                             act_en=' class="activo"' if t['lang'] == 'en' else '', **t)

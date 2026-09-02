@@ -121,6 +121,12 @@ p strong, li strong { color: var(--text-1); font-weight: 600; }
 .rejilla { display: grid; gap: 16px; }
 @media (min-width: 700px) { .rejilla.dos { grid-template-columns: 1fr 1fr; } }
 
+/* El nombre del banco es lo que se busca con la vista: que no se parta. La tabla ya tiene
+   scroll horizontal propio para cuando no quepa. */
+td.entidad { white-space: nowrap; }
+
+.apunte { display: inline-block; margin-top: 6px; color: var(--text-3); font-size: 13.5px; line-height: 1.5; }
+
 .faq h3 { font-size: 18px; margin: 30px 0 8px; }
 .faq > h3:first-child { margin-top: 0; }
 .faq p:last-child { margin-bottom: 0; }
