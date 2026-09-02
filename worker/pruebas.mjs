@@ -140,5 +140,11 @@ await comprobar('acentos graves y arrobas saneados en el issue', async () => {
   if (visto.includes('@miguelable')) throw new Error('la arroba no se saneó');
 });
 
-console.log(fallos ? `\n${fallos} FALLOS` : '\nlas 11 pruebas pasan');
+await comprobar('las respuestas declaran Vary: Origin', async () => {
+  const buena = await pedir(env(), VALIDO);
+  const mala = await pedir(env(), VALIDO, { Origin: 'https://malo.example' });
+  igual([buena.headers.get('Vary'), mala.headers.get('Vary')], ['Origin', 'Origin'], 'cabecera');
+});
+
+console.log(fallos ? `\n${fallos} FALLOS` : '\nlas 12 pruebas pasan');
 process.exit(fallos ? 1 : 0);

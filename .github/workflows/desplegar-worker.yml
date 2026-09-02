@@ -1,0 +1,65 @@
+# Despliega el Worker al empujar cambios de worker/ a main.
+#
+# Hasta ahora se desplegaba a mano desde el portátil, y eso tiene dos problemas: lo desplegado podía
+# no ser lo commiteado, y hacía falta acordarse. Esta sesión ya se olvidó una vez.
+#
+# No se despliega nada que no pase sus pruebas.
+#
+# Hacen falta dos secretos del repositorio (Settings → Secrets and variables → Actions):
+#
+#   CLOUDFLARE_API_TOKEN    Token de API con el permiso «Edit Cloudflare Workers» sobre esta cuenta.
+#                           NO uses la clave global de la cuenta: da acceso a todo.
+#   CLOUDFLARE_ACCOUNT_ID   El id de la cuenta. Está en el panel; a propósito no se guarda en el
+#                           repositorio, que es público.
+#
+# Mientras no estén puestos, el trabajo no falla: avisa y no despliega, para no dejar la insignia
+# en rojo por algo que aún no se ha configurado.
+#
+# Los secretos del propio Worker (GITHUB_TOKEN, TURNSTILE_SECRET, SAL_IP) viven en Cloudflare y
+# `wrangler deploy` no los toca. Desplegar no los borra ni hace falta volver a subirlos.
+name: Desplegar el Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/**'
+      - '.github/workflows/desplegar-worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    env:
+      HAY_CREDENCIALES: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+    steps:
+      - name: Comprobar que hay credenciales
+        run: |
+          if [ "$HAY_CREDENCIALES" != "true" ]; then
+            echo "::notice title=No se ha desplegado::Faltan CLOUDFLARE_API_TOKEN y/o CLOUDFLARE_ACCOUNT_ID en los secretos del repositorio. Despliega a mano con 'npx wrangler deploy' dentro de worker/."
+          fi
+
+      - uses: actions/checkout@v4
+        if: env.HAY_CREDENCIALES == 'true'
+
+      - uses: actions/setup-node@v4
+        if: env.HAY_CREDENCIALES == 'true'
+        with:
+          node-version: '20'
+
+      # La puerta: no se despliega algo que no pasa sus pruebas.
+      - name: Pruebas del Worker
+        if: env.HAY_CREDENCIALES == 'true'
+        run: node worker/pruebas.mjs
+
+      - name: Desplegar
+        if: env.HAY_CREDENCIALES == 'true'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        # Versión fijada: que una versión nueva de wrangler no rompa el despliegue por sorpresa.
+        run: npx --yes wrangler@4 deploy

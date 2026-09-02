@@ -325,6 +325,9 @@ const CABECERAS = {
   'Content-Type': 'application/json; charset=utf-8',
   'Cache-Control': 'no-store',
   'X-Content-Type-Options': 'nosniff',
+  // La respuesta depende del Origin de la petición: desde otro sitio se contesta 403. Con no-store
+  // ya no debería guardarla nadie, pero declarar de qué depende es lo correcto y sale gratis.
+  Vary: 'Origin',
 };
 
 function preflight() {
