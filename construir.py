@@ -23,6 +23,7 @@ CABECERA = """<!doctype html>
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
 <title>Política de privacidad — Xtracto</title>
 <meta name="robots" content="index">
+<meta name="description" content="Xtracto no recoge, no transmite y no comparte ningún dato personal. Todo lo que lee y guarda se queda en tu teléfono.">
 <link rel="canonical" href="https://xtracto.app/privacidad.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Xtracto">

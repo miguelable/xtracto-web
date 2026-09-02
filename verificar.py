@@ -131,6 +131,38 @@ def faq_coincide_con_la_pagina():
                         mal('FAQ', f'{f} declara «{pregunta}» y no está escrita en la página')
 
 
+def titulos_y_descripciones():
+    """Bing y Google recortan lo que enseñan en los resultados. Pasarse no es un error de sintaxis,
+    así que no lo canta nadie: la descripción de la portada llegó a 171 caracteres y se cortaba a
+    media frase. Y sin descripción, el buscador se inventa una con lo que pille del cuerpo."""
+    for f in paginas():
+        t = texto(f)
+        if NOINDEX.search(t):
+            continue                      # a una página que no se indexa esto le da igual
+
+        m = re.search(r'<title>([^<]*)</title>', t)
+        if not m:
+            mal('title', f'{f} no tiene')
+        elif len(m.group(1)) > 60:
+            mal('title', f'{f} mide {len(m.group(1))} caracteres y se corta sobre los 60')
+
+        m = re.search(r'<meta name="description" content="([^"]*)"', t)
+        if not m:
+            mal('descripción', f'{f} no tiene; el buscador se inventará una del cuerpo')
+        elif not 25 <= len(m.group(1)) <= 160:
+            mal('descripción', f'{f} mide {len(m.group(1))} caracteres y debe estar entre 25 y 160')
+
+
+def imagenes_con_alt():
+    """`alt` vacío es correcto y deliberado cuando el texto de al lado ya dice lo mismo —el nombre
+    junto a la marca—, pero que falte el atributo no lo es nunca. Esto vigila lo segundo, y es la
+    red que hará falta el día que entren las capturas de la app."""
+    for f in paginas():
+        for etiqueta in re.findall(r'<img\b[^>]*>', texto(f)):
+            if not re.search(r'\balt=', etiqueta):
+                mal('alt', f'{f}: {etiqueta[:70]} no tiene atributo alt')
+
+
 def sitemap_coherente():
     ruta = RAIZ / 'sitemap.xml'
     if not ruta.exists():
@@ -154,7 +186,8 @@ def sitemap_coherente():
 def main():
     for comprobacion in (referencias_resuelven, canonicals_y_alternativas, cabecera_de_la_politica,
                          nada_de_google, todas_con_csp, json_ld_valido,
-                         faq_coincide_con_la_pagina, sitemap_coherente):
+                         faq_coincide_con_la_pagina, titulos_y_descripciones,
+                         imagenes_con_alt, sitemap_coherente):
         comprobacion()
         print(f'  · {comprobacion.__name__.replace("_", " ")}')
     if fallos:

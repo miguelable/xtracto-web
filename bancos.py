@@ -75,7 +75,7 @@ PLANTILLA = '''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{titulo} — Xtracto</title>
+<title>{titulo}</title>
 <meta name="description" content="{desc}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
@@ -86,7 +86,7 @@ PLANTILLA = '''<!doctype html>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Xtracto">
 <meta property="og:url" content="https://xtracto.app/{fichero}">
-<meta property="og:title" content="{titulo} — Xtracto">
+<meta property="og:title" content="{titulo}">
 <meta property="og:description" content="{desc}">
 <meta property="og:image" content="https://xtracto.app/{og}">
 <meta property="og:image:width" content="1200">

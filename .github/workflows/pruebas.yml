@@ -33,4 +33,4 @@ jobs:
         run: node --check formato.js
 
       - name: Sintaxis de los generadores
-        run: python3 -m py_compile construir.py sitemap.py verificar.py bancos.py marca/generar.py marca/tarjeta.py fuentes/bajar.py
+        run: python3 -m py_compile construir.py sitemap.py verificar.py bancos.py indexnow.py marca/generar.py marca/tarjeta.py fuentes/bajar.py
