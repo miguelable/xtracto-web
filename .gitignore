@@ -1,1 +1,10 @@
 .DS_Store
+
+# Caché y estado local de Wrangler. Trae el account ID de Cloudflare y el correo de la cuenta,
+# y no hace ninguna falta para desplegar: se regenera solo en cada máquina.
+.wrangler/
+node_modules/
+.dev.vars
+
+# Manrope se baja sola al generar las tarjetas; no hace falta versionarla aquí.
+marca/.fuentes/
