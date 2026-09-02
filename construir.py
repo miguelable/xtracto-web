@@ -14,6 +14,8 @@ import sys
 from pathlib import Path
 
 CABECERA = """<!doctype html>
+<!-- Generado por construir.py desde el PRIVACY.md del repositorio de la app.
+     No editar a mano: al regenerarlo se pierde lo que cambies aquí. -->
 <html lang="es">
 <head>
 <meta charset="utf-8">
