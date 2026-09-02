@@ -18,6 +18,8 @@
       enviar: 'Enviar el formato',
       gracias: '¡Recibido, gracias! Si tu banco acaba soportado, podrás recuperar los avisos que ya '
              + 'tengas guardados con el botón «Reprocesar» de Ajustes.',
+      enEspera: 'Recibido y guardado, gracias. Ahora mismo no se ha podido publicar, así que se '
+              + 'publicará solo en cuanto se pueda. No hace falta que lo envíes otra vez.',
       sinRed: 'No se pudo conectar. Revisa tu conexión e inténtalo otra vez.',
       generico: 'No se pudo enviar. Inténtalo más tarde.',
       captcha: 'No se pudo verificar que no eres un robot. Recarga la página e inténtalo otra vez.',
@@ -37,6 +39,8 @@
       enviar: 'Send the format',
       gracias: 'Got it, thank you! If your bank ends up supported, you will be able to recover the '
              + 'alerts you already have stored with the "Reprocess" button in Settings.',
+      enEspera: 'Received and stored, thank you. It could not be published right now, so it will be '
+              + 'published on its own as soon as possible. No need to send it again.',
       sinRed: 'Could not connect. Check your connection and try again.',
       generico: 'Could not send it. Please try again later.',
       captcha: 'We could not verify that you are not a robot. Reload the page and try again.',
@@ -117,7 +121,7 @@
         form.style.display = 'none';
         resultado.className = 'alerta bien';
         resultado.style.display = 'block';
-        resultado.textContent = t.gracias;
+        resultado.textContent = datos.estado === 'en_espera' ? t.enEspera : t.gracias;
         form.parentNode.appendChild(resultado);
       } else {
         resultado.className = 'alerta mal';

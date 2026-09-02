@@ -78,15 +78,29 @@ export default {
     const captcha = await revisarTurnstile(env, datos.turnstile, ip);
     if (!captcha.ok) return error(403, captcha.motivo);
 
-    await apuntarEnvio(env, ip);
-
     const campos = validar(datos);
     if (campos.error) return error(400, campos.error);
 
-    const numero = await crearIssue(env, campos);
-    if (!numero) return error(502, 'github');
+    // Se apunta aquí, con el envío ya validado: la basura no debe gastarle la cuota a nadie.
+    await apuntarEnvio(env, ip);
 
-    return exito('creado', numero);
+    const publicado = await crearIssue(env, campos);
+    if (publicado.numero) return exito('creado', publicado.numero);
+
+    // GitHub no lo aceptó. El envío NO se pierde: se guarda y lo reintenta el disparo programado.
+    if (await guardarPendiente(env, campos)) return exito('en_espera');
+    return error(502, 'github');
+  },
+
+  /**
+   * Disparo programado: reintenta lo que quedó en espera.
+   *
+   * El caso que esto cubre no es hipotético: el token de GitHub es de los que caducan. El día que
+   * lo haga, sin esto cada envío devolvería un 502 y se perdería para siempre, en silencio y sin
+   * que nadie se enterase hasta revisar los issues y ver que no llega ninguno.
+   */
+  async scheduled(evento, env, ctx) {
+    ctx.waitUntil(reintentarPendientes(env));
   },
 };
 
@@ -123,6 +137,19 @@ function limpiar(valor) {
     .replace(/\n{3,}/g, '\n\n');
 }
 
+/**
+ * El KV guarda dos cosas, separadas por prefijo:
+ *   ip:<hash>        contador de envíos por hora. Caduca en 1 h. Nunca la dirección, solo su hash.
+ *   pendiente:<id>   envío validado que GitHub no aceptó. Caduca en 30 días.
+ */
+const ESPERA_TTL = 30 * 24 * 3600;
+
+/** Sin el KV enlazado, el límite por IP deja de existir sin que se note. Que se note. */
+function almacen(env) {
+  if (!env.LIMITES) console.error('El KV LIMITES no está enlazado: sin límite por IP ni respaldo.');
+  return env.LIMITES;
+}
+
 /** La IP nunca se almacena en claro: solo su hash con sal, y con caducidad de una hora. */
 async function claveLimite(env, ip) {
   return 'ip:' + (await sha256(ip + (env.SAL_IP || '')));
@@ -130,7 +157,7 @@ async function claveLimite(env, ip) {
 
 /** Mira el contador sin tocarlo. */
 async function superaLimite(env, ip) {
-  if (!env.LIMITES || !ip) return false;
+  if (!almacen(env) || !ip) return false;
   const actual = parseInt((await env.LIMITES.get(await claveLimite(env, ip))) || '0', 10);
   return actual >= LIMITE_POR_HORA;
 }
@@ -138,6 +165,7 @@ async function superaLimite(env, ip) {
 /** Apunta un envío que ya ha pasado el captcha. */
 async function apuntarEnvio(env, ip) {
   if (!env.LIMITES || !ip) return;
+
   const clave = await claveLimite(env, ip);
   const actual = parseInt((await env.LIMITES.get(clave)) || '0', 10);
   await env.LIMITES.put(clave, String(actual + 1), { expirationTtl: 3600 });
@@ -236,9 +264,56 @@ async function crearIssue(env, campos) {
     }),
   });
 
-  if (!respuesta.ok) return null;
+  if (!respuesta.ok) {
+    // El cuerpo del error de GitHub dice si es el token, los permisos o el repositorio. Va al log,
+    // que es donde lo mira el operador, y no a la respuesta, que la lee cualquiera.
+    const detalle = await respuesta.text().catch(() => '');
+    console.error(`GitHub rechazó la creación del issue (${respuesta.status}):`, detalle.slice(0, 400));
+    return {};
+  }
   const issue = await respuesta.json();
-  return issue.number || null;
+  return { numero: issue.number || null };
+}
+
+/** Aparca un envío ya validado para volver a intentarlo. Lo guardado no lleva ni IP ni cifras. */
+async function guardarPendiente(env, campos) {
+  if (!almacen(env)) return false;
+  const clave = 'pendiente:' + Date.now() + '-' + crypto.randomUUID().slice(0, 8);
+  try {
+    await env.LIMITES.put(clave, JSON.stringify(campos), { expirationTtl: ESPERA_TTL });
+    console.warn(`Envío guardado en espera como ${clave}: GitHub no lo aceptó.`);
+    return true;
+  } catch (e) {
+    console.error('No se pudo ni guardar el envío en espera:', e && e.message);
+    return false;
+  }
+}
+
+/** Publica lo que quedó en espera. Se para al primer fallo: si GitHub sigue caído, no se insiste. */
+async function reintentarPendientes(env) {
+  if (!almacen(env)) return;
+  const lista = await env.LIMITES.list({ prefix: 'pendiente:', limit: 20 });
+  if (!lista.keys.length) return;
+  console.log(`Hay ${lista.keys.length} envío(s) en espera. Reintentando.`);
+
+  for (const { name } of lista.keys) {
+    const crudo = await env.LIMITES.get(name);
+    if (!crudo) continue;
+    let campos;
+    try {
+      campos = JSON.parse(crudo);
+    } catch {
+      console.error(`El envío en espera ${name} no se puede leer. Lo dejo para mirarlo a mano.`);
+      continue;
+    }
+    const publicado = await crearIssue(env, campos);
+    if (!publicado.numero) {
+      console.error(`${name} sigue sin poder publicarse. Lo dejo para el próximo disparo.`);
+      return;
+    }
+    await env.LIMITES.delete(name);
+    console.log(`${name} publicado como issue #${publicado.numero}.`);
+  }
 }
 
 // --- Respuestas -----------------------------------------------------------------------------

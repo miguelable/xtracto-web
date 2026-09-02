@@ -14,7 +14,14 @@ routes = [
   { pattern = "api.xtracto.app", custom_domain = true }
 ]
 
-# Contador del límite por IP. Guarda hashes con caducidad de una hora, nunca direcciones.
+# Reintenta cada hora los envíos que GitHub no aceptó en su momento. Sin esto, el día que caduque
+# el token cada envío se perdería en silencio.
+[triggers]
+crons = ["23 * * * *"]
+
+# El KV guarda dos cosas, separadas por prefijo:
+#   ip:<hash>       contador de envíos por hora. Caduca en 1 h. Nunca la dirección, solo su hash.
+#   pendiente:<id>  envío validado que GitHub no aceptó. Caduca en 30 días. Sin IP ni cifras.
 # Crear con:  npx wrangler kv namespace create LIMITES
 [[kv_namespaces]]
 binding = "LIMITES"
