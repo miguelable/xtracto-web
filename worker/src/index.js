@@ -1,9 +1,17 @@
 /**
- * Recepción de formatos de notificación enviados desde https://xtracto.app/formato.html
+ * Recepción de envíos del formulario de xtracto.app. Dos rutas, dos cosas distintas:
  *
- * El objetivo es que cualquiera pueda mandar la plantilla de un aviso que la app no reconoce **sin
- * registrarse en ningún sitio**. El Worker valida, filtra y crea un issue en el repositorio con un
- * token propio, así que quien envía no necesita cuenta de GitHub.
+ *   POST /formato   la plantilla de un aviso que la app no interpreta  (formato.html)
+ *   POST /banco     pedir un banco que NO está en el catálogo          (pide-tu-banco.html)
+ *
+ * **Por qué son dos y no una.** `/formato` exige plantilla, y quien tiene un banco fuera del
+ * catálogo no puede tenerla: la app solo archiva las apps que `KnownPackages.isKnown` reconoce, así
+ * que de un banco desconocido no guarda ni un aviso y no hay nada que copiar. Con un solo
+ * formulario, la persona que más necesita escribir es justamente la única que no puede.
+ *
+ * El objetivo de las dos es el mismo: que cualquiera pueda contarlo **sin registrarse en ningún
+ * sitio**. El Worker valida, filtra y crea un issue en el repositorio con un token propio, así que
+ * quien envía no necesita cuenta de GitHub.
  *
  * Todo lo que llega de fuera se considera hostil. Las defensas, por orden de aplicación:
  *
@@ -17,6 +25,8 @@
  *     spam, que casi siempre lleva números (teléfonos, precios, URLs).
  *  7. Saneado antes de componer el issue: fuera caracteres de control y acentos graves, para que
  *     nadie pueda escaparse del bloque de código y escribir markdown, enlaces o menciones.
+ *  8. Ruta cerrada: cualquier camino que no sea /formato o /banco se rechaza. Antes el Worker
+ *     ignoraba el pathname y contestaba igual en cualquier URL del subdominio.
  *
  * El token de GitHub va como secreto del Worker y debe ser un token de acceso preciso con permiso
  * de **Issues: write sobre este único repositorio**. Nada más.
@@ -27,7 +37,10 @@ const ORIGEN = 'https://xtracto.app';
 const MAX_CUERPO = 8 * 1024;
 const LIMITE_POR_HORA = 5;
 
-const LIMITES = { entidad: 60, paquete: 100, plantilla: 2000, tipo: 40 };
+/** Los dos únicos caminos que atiende. Cualquier otro es un 404. */
+const RUTAS = { '/formato': 'formato', '/banco': 'banco' };
+
+const LIMITES = { entidad: 60, paquete: 100, plantilla: 2000, tipo: 40, pais: 40 };
 
 const TIPOS = new Set([
   'Compra con tarjeta',
@@ -44,11 +57,26 @@ const PAQUETE = /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/;
 /** Caracteres de control, que no pintan nada en un texto pegado por una persona. */
 const CONTROL = /[\u0000-\u0008\u000B-\u001F\u007F]/g;
 
+/**
+ * País: solo letras, espacios y separadores de nombre propio.
+ *
+ * No es un desplegable de doscientos países porque el dato solo sirve para encontrar la ficha de
+ * Play correcta —hay varios bancos llamados «Banco Popular» en países distintos—, y una lista
+ * cerrada habría que mantenerla. Al no admitir dígitos ni signos, tampoco puede colarse una URL,
+ * un teléfono ni markdown.
+ */
+const PAIS = /^[\p{L}][\p{L}\s.'-]*$/u;
+
 export default {
   async fetch(request, env) {
     if (request.method === 'OPTIONS') return preflight();
     if (request.method !== 'POST') return error(405, 'metodo');
     if (request.headers.get('Origin') !== ORIGEN) return error(403, 'origen');
+
+    // El Worker atiende TODO api.xtracto.app (es un custom_domain, no una ruta), así que el camino
+    // hay que cerrarlo aquí. Antes contestaba igual en cualquier URL del subdominio.
+    const modo = RUTAS[new URL(request.url).pathname];
+    if (!modo) return error(404, 'ruta');
 
     const tipoContenido = request.headers.get('Content-Type') || '';
     if (!tipoContenido.includes('application/json')) return error(415, 'contenido');
@@ -78,7 +106,7 @@ export default {
     const captcha = await revisarTurnstile(env, datos.turnstile, ip);
     if (!captcha.ok) return error(403, captcha.motivo);
 
-    const campos = validar(datos);
+    const campos = modo === 'banco' ? validarBanco(datos) : validar(datos);
     if (campos.error) return error(400, campos.error);
 
     // Se apunta aquí, con el envío ya validado: la basura no debe gastarle la cuota a nadie.
@@ -121,7 +149,39 @@ function validar(datos) {
   // La regla de oro: si hay un número, puede ser un dato de alguien. No entra.
   if (/\d/.test(plantilla)) return { error: 'plantilla_con_cifras' };
 
-  return { entidad: limpiar(entidad), paquete, plantilla: limpiar(plantilla), tipo };
+  return { modo: 'formato', entidad: limpiar(entidad), paquete, plantilla: limpiar(plantilla), tipo };
+}
+
+/**
+ * Valida una petición de alta de banco.
+ *
+ * Pide mucho menos que [validar] a propósito: la persona que escribe aquí tiene un banco que la app
+ * **no** reconoce, así que no tiene ninguna plantilla que pegar ni sabe qué tipo de aviso manda su
+ * banco. Con el nombre basta, porque cada identificador se verifica a mano contra su ficha de Play
+ * antes de entrar en el catálogo; el paquete, si lo sabe, ahorra ese trabajo.
+ *
+ * No hay campo de texto libre, y es deliberado: invitaría a pegar datos personales y a spam, y la
+ * regla del proyecto es no recibir lo que no hace falta. Con nombre, país y paquete se puede añadir
+ * cualquier banco al catálogo.
+ */
+function validarBanco(datos) {
+  const texto = (valor, limite) =>
+    typeof valor === 'string' ? valor.normalize('NFC').trim().slice(0, limite) : '';
+
+  const entidad = texto(datos.entidad, LIMITES.entidad);
+  const pais = texto(datos.pais, LIMITES.pais);
+  const paquete = texto(datos.paquete, LIMITES.paquete);
+
+  if (entidad.length < 2) return { error: 'entidad' };
+  if (pais.length < 2 || !PAIS.test(pais)) return { error: 'pais' };
+  // El paquete es opcional: casi nadie sabe el identificador de la app de su banco. Pero si viene,
+  // tiene que tener forma de identificador, para que no se cuele texto libre por esta puerta.
+  if (paquete && !PAQUETE.test(paquete)) return { error: 'paquete' };
+
+  // `modo` viaja con los campos porque los envíos que GitHub no acepta se guardan en el KV y los
+  // republica el disparo programado. Sin él, un alta pendiente se publicaría más tarde como si
+  // fuera un formato, con la plantilla y el tipo a `undefined`.
+  return { modo: 'banco', entidad: limpiar(entidad), pais: limpiar(pais), paquete };
 }
 
 /**
@@ -223,7 +283,69 @@ async function revisarTurnstile(env, token, ip) {
   return { ok: false, motivo: 'captcha' };
 }
 
+/**
+ * Crea el issue en GitHub. Reparte por `campos.modo`, que es lo que también permite que el disparo
+ * programado republique correctamente un envío que quedó en espera.
+ */
 async function crearIssue(env, campos) {
+  const { titulo, cuerpo, etiquetas } =
+    campos.modo === 'banco' ? issueBanco(campos) : issueFormato(campos);
+
+  const respuesta = await fetch('https://api.github.com/repos/' + REPO + '/issues', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + env.GITHUB_TOKEN,
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'xtracto-formato-worker',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title: titulo, body: cuerpo, labels: etiquetas }),
+  });
+
+  if (!respuesta.ok) {
+    // El cuerpo del error de GitHub dice si es el token, los permisos o el repositorio. Va al log,
+    // que es donde lo mira el operador, y no a la respuesta, que la lee cualquiera.
+    const detalle = await respuesta.text().catch(() => '');
+    console.error(`GitHub rechazó la creación del issue (${respuesta.status}):`, detalle.slice(0, 400));
+    return {};
+  }
+  const issue = await respuesta.json();
+  return { numero: issue.number || null };
+}
+
+/** Petición de alta: un banco que no está en el catálogo. */
+function issueBanco(campos) {
+  return {
+    titulo: '[banco] ' + campos.entidad + ' · ' + campos.pais,
+    cuerpo: [
+      '### Banco o aplicación',
+      '',
+      campos.entidad,
+      '',
+      '### País',
+      '',
+      campos.pais,
+      '',
+      '### Identificador de la app',
+      '',
+      '```text',
+      campos.paquete || '(no lo sabe)',
+      '```',
+      '',
+      '---',
+      '**Antes de añadirlo al catálogo:** verificar el identificador contra su ficha de Google Play',
+      '(el `id=` de la URL *es* el nombre de paquete) y regenerar el `<queries>` del manifiesto, que',
+      'tiene un test que falla si se olvida.',
+      '',
+      '_Enviado desde el formulario de xtracto.app. Sin plantilla: la app no archiva nada de una app',
+      'que no reconoce, así que quien lo pide no tiene ningún aviso que copiar._',
+    ].join('\n'),
+    etiquetas: ['banco', 'via-web'],
+  };
+}
+
+/** Envío de formato: la plantilla de un aviso que el parser no interpreta. */
+function issueFormato(campos) {
   const cuerpo = [
     '### Banco o aplicación',
     '',
@@ -249,30 +371,11 @@ async function crearIssue(env, campos) {
     '_Enviado desde el formulario de xtracto.app. Validado en el servidor: sin cifras._',
   ].join('\n');
 
-  const respuesta = await fetch('https://api.github.com/repos/' + REPO + '/issues', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + env.GITHUB_TOKEN,
-      Accept: 'application/vnd.github+json',
-      'User-Agent': 'xtracto-formato-worker',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      title: '[formato] ' + campos.entidad + ' · ' + campos.tipo,
-      body: cuerpo,
-      labels: ['formato', 'via-web'],
-    }),
-  });
-
-  if (!respuesta.ok) {
-    // El cuerpo del error de GitHub dice si es el token, los permisos o el repositorio. Va al log,
-    // que es donde lo mira el operador, y no a la respuesta, que la lee cualquiera.
-    const detalle = await respuesta.text().catch(() => '');
-    console.error(`GitHub rechazó la creación del issue (${respuesta.status}):`, detalle.slice(0, 400));
-    return {};
-  }
-  const issue = await respuesta.json();
-  return { numero: issue.number || null };
+  return {
+    titulo: '[formato] ' + campos.entidad + ' · ' + campos.tipo,
+    cuerpo,
+    etiquetas: ['formato', 'via-web'],
+  };
 }
 
 /** Aparca un envío ya validado para volver a intentarlo. Lo guardado no lleva ni IP ni cifras. */

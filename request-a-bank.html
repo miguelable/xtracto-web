@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Request your bank — Xtracto</title>
+<meta name="description" content="Your bank is not on Xtracto's list. Request it here: just the name. No sign-up, and not a single detail about you.">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src https://api.xtracto.app https://challenges.cloudflare.com; base-uri 'none'; form-action 'none'">
+<meta property="og:title" content="Request your bank — Xtracto">
+<meta property="og:description" content="Your bank is not on Xtracto's list. Request it here: just the name.">
+<meta property="og:image" content="https://xtracto.app/og-en.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="formato.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="banco.js" defer></script>
+</head>
+<body>
+
+<div class="envoltorio" style="padding-top:32px">
+  <div class="idiomas"><a href="pide-tu-banco.html">Español</a> · <a href="request-a-bank.html" class="activo">English</a></div>
+  <p><a href="en.html">&larr; Xtracto</a></p>
+
+  <h1 style="font-size:32px;margin-bottom:12px">Request your bank</h1>
+  <p style="color:var(--text-2);max-width:620px">
+    Xtracto can only read alerts from the apps in its catalogue, and no catalogue covers the
+    thousands of banks out there. If yours is not on <a href="banks.html">the list</a>, tell us which
+    one it is and we will add it.
+  </p>
+
+  <div class="aviso" style="margin:24px 0 32px">
+    <p style="margin:0"><strong>The name is enough.</strong> You don't need to know anything
+    technical, sign up for anything, or give us any detail about you: no email, no name, no phone.</p>
+  </div>
+
+  <form id="formulario" autocomplete="off">
+    <div class="campo">
+      <label for="entidad">Bank or app</label>
+      <input id="entidad" name="entidad" maxlength="60" required placeholder="Monzo, N26, Wise...">
+      <p class="ayuda">The name as the app is called on your phone.</p>
+    </div>
+
+    <div class="campo">
+      <label for="pais">Country</label>
+      <input id="pais" name="pais" maxlength="40" required placeholder="United Kingdom">
+      <p class="ayuda">We need it because different countries have banks with the same name, so this
+      is how we find the right app and not another one.</p>
+    </div>
+
+    <div class="campo">
+      <label for="paquete">App identifier <span style="opacity:.6">(optional)</span></label>
+      <input id="paquete" name="paquete" maxlength="100" placeholder="com.example.bank"
+             pattern="[a-z][a-z0-9_]*(\.[a-z0-9_]+)+">
+      <p class="ayuda">If you know it, you save us a step. It appears in the app's Google Play page
+      address, right after <code>id=</code>. If you don't know it, leave it empty.</p>
+    </div>
+
+    <!-- Bot trap: invisible to a person, irresistible to an automatic filler. -->
+    <div class="oculto" aria-hidden="true">
+      <label for="web">Do not fill this field</label>
+      <input id="web" name="web" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="campo">
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAEkA8WWBv9dC67Lz" data-theme="dark"></div>
+    </div>
+
+    <button type="submit" class="boton" id="enviar">Request this bank</button>
+    <div class="alerta" id="resultado"></div>
+
+    <p class="ayuda" style="margin-top:28px">
+      Sending it publishes a public issue in the project's repository, with the bank's name and
+      country. Your email address is not stored, nor any identifier of yours; your IP is used only
+      to rate-limit submissions per hour and is stored hashed, never in the clear. See the
+      <a href="privacidad.html#en">privacy policy</a>.
+    </p>
+  </form>
+</div>
+
+</body>
+</html>

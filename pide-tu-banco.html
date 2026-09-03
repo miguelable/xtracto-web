@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pide tu banco — Xtracto</title>
+<meta name="description" content="Tu banco no está en la lista de Xtracto. Pídelo aquí: solo el nombre. Sin registrarte y sin mandar ni un dato tuyo.">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src https://api.xtracto.app https://challenges.cloudflare.com; base-uri 'none'; form-action 'none'">
+<meta property="og:title" content="Pide tu banco — Xtracto">
+<meta property="og:description" content="Tu banco no está en la lista de Xtracto. Pídelo aquí: solo el nombre.">
+<meta property="og:image" content="https://xtracto.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="formato.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="banco.js" defer></script>
+</head>
+<body>
+
+<div class="envoltorio" style="padding-top:32px">
+  <div class="idiomas"><a href="pide-tu-banco.html" class="activo">Español</a> · <a href="request-a-bank.html">English</a></div>
+  <p><a href="index.html">&larr; Xtracto</a></p>
+
+  <h1 style="font-size:32px;margin-bottom:12px">Pide tu banco</h1>
+  <p style="color:var(--text-2);max-width:620px">
+    Xtracto solo puede leer los avisos de las apps que tiene en su catálogo, y no hay catálogo que
+    cubra los miles de bancos que existen. Si el tuyo no está en <a href="bancos.html">la lista</a>,
+    dinos cuál es y lo añadimos.
+  </p>
+
+  <div class="aviso" style="margin:24px 0 32px">
+    <p style="margin:0"><strong>Con el nombre basta.</strong> No hace falta que sepas nada técnico,
+    ni registrarte en nada, ni darnos ningún dato tuyo: no se pide correo, ni nombre, ni teléfono.</p>
+  </div>
+
+  <form id="formulario" autocomplete="off">
+    <div class="campo">
+      <label for="entidad">Banco o aplicación</label>
+      <input id="entidad" name="entidad" maxlength="60" required placeholder="Kutxabank, N26, Wise...">
+      <p class="ayuda">El nombre tal y como se llama la app en tu móvil.</p>
+    </div>
+
+    <div class="campo">
+      <label for="pais">País</label>
+      <input id="pais" name="pais" maxlength="40" required placeholder="España">
+      <p class="ayuda">Hace falta porque hay bancos con el mismo nombre en países distintos, y así
+      buscamos la app correcta y no otra.</p>
+    </div>
+
+    <div class="campo">
+      <label for="paquete">Identificador de la app <span style="opacity:.6">(opcional)</span></label>
+      <input id="paquete" name="paquete" maxlength="100" placeholder="com.ejemplo.banca"
+             pattern="[a-z][a-z0-9_]*(\.[a-z0-9_]+)+">
+      <p class="ayuda">Si lo sabes, nos ahorras un paso. Sale en la dirección de la ficha de Google
+      Play de la app, después de <code>id=</code>. Si no lo sabes, déjalo vacío.</p>
+    </div>
+
+    <!-- Trampa para robots: invisible para una persona, irresistible para un rellenador automático. -->
+    <div class="oculto" aria-hidden="true">
+      <label for="web">No rellenes este campo</label>
+      <input id="web" name="web" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="campo">
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAEkA8WWBv9dC67Lz" data-theme="dark"></div>
+    </div>
+
+    <button type="submit" class="boton" id="enviar">Pedir este banco</button>
+    <div class="alerta" id="resultado"></div>
+
+    <p class="ayuda" style="margin-top:28px">
+      Al enviarlo se publica como una incidencia pública en el repositorio del proyecto, con el
+      nombre del banco y el país. No se guarda tu dirección de correo ni ningún identificador tuyo;
+      la IP se usa solo para limitar los envíos por hora y se almacena cifrada en un resumen, nunca
+      en claro. Ver la <a href="privacidad.html">política de privacidad</a>.
+    </p>
+  </form>
+</div>
+
+</body>
+</html>

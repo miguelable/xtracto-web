@@ -44,11 +44,29 @@ const env = () => ({ LIMITES: kvFalso(), TURNSTILE_SECRET: 's', GITHUB_TOKEN: 'g
 const VALIDO = { entidad: 'BBVA', paquete: 'com.bbva.app', tipo: 'Bizum',
                  plantilla: 'texto: Bizum de <importe> a <comercio>', turnstile: 'x'.repeat(20) };
 
-const pedir = (e, cuerpo, cab = {}) => worker.fetch(new Request('https://api.xtracto.app/formato', {
+const pedirA = (ruta, e, cuerpo, cab = {}) => worker.fetch(new Request('https://api.xtracto.app' + ruta, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json', Origin: 'https://xtracto.app', 'CF-Connecting-IP': '1.2.3.4', ...cab },
   body: JSON.stringify(cuerpo),
 }), e);
+const pedir = (e, cuerpo, cab = {}) => pedirA('/formato', e, cuerpo, cab);
+
+/** Alta de banco: ni plantilla ni tipo, que es justo el punto. */
+const BANCO = { entidad: 'Kutxabank', pais: 'España', paquete: 'com.kutxabank.android',
+                turnstile: 'x'.repeat(20) };
+const pedirBanco = (e, cuerpo, cab = {}) => pedirA('/banco', e, cuerpo, cab);
+
+/** Devuelve el JSON que se le mandó a GitHub, para poder mirar título, cuerpo y etiquetas. */
+const espiarIssue = async (fn) => {
+  let visto = null;
+  const antes = globalThis.fetch;
+  globalThis.fetch = async (u, o) => {
+    if (String(u).includes('api.github')) visto = JSON.parse(o.body);
+    return antes(u, o);
+  };
+  try { await fn(); } finally { globalThis.fetch = antes; }
+  return visto;
+};
 
 let fallos = 0;
 const comprobar = async (nombre, fn) => {
@@ -146,5 +164,74 @@ await comprobar('las respuestas declaran Vary: Origin', async () => {
   igual([buena.headers.get('Vary'), mala.headers.get('Vary')], ['Origin', 'Origin'], 'cabecera');
 });
 
-console.log(fallos ? `\n${fallos} FALLOS` : '\nlas 12 pruebas pasan');
+// --- Alta de banco (/banco) --------------------------------------------------------------------
+// Existe porque quien tiene un banco fuera del catálogo NO puede usar /formato: la app no archiva
+// nada de una app que no reconoce, así que no tiene plantilla que pegar.
+
+await comprobar('alta de banco válida crea el issue con su etiqueta', async () => {
+  githubOk = true;
+  const issue = await espiarIssue(async () => {
+    const r = await pedirBanco(env(), BANCO);
+    igual([r.status, (await r.json()).estado], [200, 'creado'], 'respuesta');
+  });
+  igual(issue.labels, ['banco', 'via-web'], 'etiquetas');
+  if (!issue.title.startsWith('[banco] Kutxabank')) throw new Error('título: ' + issue.title);
+  if (!issue.body.includes('España')) throw new Error('el país no aparece en el cuerpo');
+});
+
+await comprobar('el paquete es opcional: casi nadie lo sabe', async () => {
+  githubOk = true;
+  const issue = await espiarIssue(async () => {
+    const { paquete, ...sinPaquete } = BANCO;
+    const r = await pedirBanco(env(), sinPaquete);
+    igual([r.status, (await r.json()).ok], [200, true], 'respuesta');
+  });
+  if (!issue.body.includes('(no lo sabe)')) throw new Error('debería decir que no lo sabe');
+});
+
+await comprobar('un paquete con forma inválida sí se rechaza', async () => {
+  const r = await pedirBanco(env(), { ...BANCO, paquete: 'mira https://spam.example' });
+  igual([r.status, (await r.json()).motivo], [400, 'paquete'], 'respuesta');
+});
+
+await comprobar('el país es obligatorio: hay varios bancos con el mismo nombre', async () => {
+  const { pais, ...sinPais } = BANCO;
+  const r = await pedirBanco(env(), sinPais);
+  igual([r.status, (await r.json()).motivo], [400, 'pais'], 'respuesta');
+});
+
+await comprobar('el país no admite cifras ni signos: no cabe una URL ni un teléfono', async () => {
+  for (const malo of ['España 28001', 'http://spam.example', 'a@b.c']) {
+    const r = await pedirBanco(env(), { ...BANCO, pais: malo });
+    igual([r.status, (await r.json()).motivo], [400, 'pais'], 'país «' + malo + '»');
+  }
+});
+
+await comprobar('un alta que queda en espera se republica como alta, no como formato', async () => {
+  // El fallo que esto persigue: los envíos que GitHub rechaza se guardan en el KV y los republica
+  // el disparo programado. Si `modo` no viajara con los campos, el alta volvería a salir como un
+  // issue de formato, con la plantilla y el tipo a `undefined`.
+  githubOk = false;
+  const e = env();
+  await pedirBanco(e, BANCO);
+  githubOk = true;
+  // `scheduled` no espera a `waitUntil`: hay que recoger las promesas y esperarlas DENTRO del
+  // espía, o el fetch a GitHub ocurre cuando ya se ha restaurado y no se ve nada.
+  const issue = await espiarIssue(async () => {
+    const tareas = [];
+    await worker.scheduled({}, e, { waitUntil: (t) => tareas.push(t) });
+    await Promise.all(tareas);
+  });
+  igual(issue.labels, ['banco', 'via-web'], 'etiquetas del republicado');
+  if (issue.body.includes('undefined')) throw new Error('el cuerpo republicado lleva undefined');
+});
+
+await comprobar('una ruta que no existe es 404', async () => {
+  for (const ruta of ['/', '/formatos', '/banco/x', '/.env']) {
+    const r = await pedirA(ruta, env(), VALIDO);
+    igual([r.status, (await r.json()).motivo], [404, 'ruta'], 'ruta ' + ruta);
+  }
+});
+
+console.log(fallos ? `\n${fallos} FALLOS` : '\nlas 19 pruebas pasan');
 process.exit(fallos ? 1 : 0);
