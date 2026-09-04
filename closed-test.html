@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xtracto closed test — ask to join</title>
+<meta name="description" content="Xtracto is already on Google Play, but in closed testing: only enrolled accounts can install it. Ask here to join as a tester.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="canonical" href="https://xtracto.app/closed-test.html">
+<link rel="alternate" hreflang="es" href="https://xtracto.app/prueba-cerrada.html">
+<link rel="alternate" hreflang="en" href="https://xtracto.app/closed-test.html">
+<link rel="alternate" hreflang="x-default" href="https://xtracto.app/prueba-cerrada.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Xtracto">
+<meta property="og:url" content="https://xtracto.app/closed-test.html">
+<meta property="og:title" content="Xtracto closed test — ask to join">
+<meta property="og:description" content="Xtracto is already on Google Play, but in closed testing: only enrolled accounts can install it. Ask here to join as a tester.">
+<meta property="og:image" content="https://xtracto.app/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="formato.css">
+<script src="tester.js" defer></script>
+</head>
+<body>
+
+<div class="envoltorio" style="padding-top:32px">
+  <div class="idiomas"><a href="prueba-cerrada.html">Español</a> · <a href="closed-test.html" class="activo">English</a></div>
+  <p><a href="en.html">&larr; Xtracto</a></p>
+
+  <h1 style="font-size:32px;margin-bottom:12px">Closed test</h1>
+  <p style="color:var(--text-2);max-width:620px">
+    Xtracto is already uploaded to Google Play, but <strong>you cannot download it yet</strong>: it is
+    in closed testing, so only accounts enrolled as testers can install it. That is not our choice.
+    Before it lets a personal account publish an app, Google requires
+    <strong>12 people in the test for 14 days in a row</strong>, and it checks that they actually used
+    it. Until that is done, being a tester is the only way to have it.
+  </p>
+
+  <h2 style="margin-top:40px">If you are already enrolled</h2>
+  <p>Accept the invitation, then install it from Play:</p>
+  <p style="margin-top:18px">
+    <a class="boton" href="https://play.google.com/apps/testing/app.xtracto">Join the test</a>
+  </p>
+  <div class="aviso" style="margin:26px 0 0">
+    <p style="margin:0 0 12px"><strong>Two things that throw everyone off</strong>:</p>
+    <p style="margin:0 0 10px">Until Google finishes reviewing it, Play shows it as
+    <code>app.xtracto (unreviewed)</code> and not as “Xtracto”. It is the same app: the real name
+    appears once the review is approved.</p>
+    <p style="margin:0">Install it with <strong>the same Google account</strong> you accepted the
+    invitation with. If you have several on your phone this is the most common slip, and what you see
+    is the store saying the app is not available.</p>
+  </div>
+  <p class="ayuda" style="margin-top:18px">
+    And if you follow the link and Play says the test is not available, nothing is broken: your
+    account is not on the list yet. Ask below.
+  </p>
+
+  <h2 style="margin-top:44px">What is expected of a tester</h2>
+  <p>Not much, but two things are not optional, and not out of whim: the 14-day counter is Google’s,
+  and someone leaving halfway resets it.</p>
+  <ul>
+    <li><strong>Do not leave the test during those two weeks</strong>, and open the app now and then:
+    Google checks that it was used, not just installed.</li>
+    <li>When you open it you will see a red warning: grant it <strong>notification access</strong>.
+    Without that it records nothing, because that is all it lives on.</li>
+    <li>In Settings, check that your bank is switched on. Only the apps you have installed show up,
+    out of a catalogue of 216.</li>
+    <li>If your bank is not among <a href="banks.html">the ones it recognises</a>, the app is still
+    useful to you: on the Movements tab, the <strong>+</strong> button records an expense by hand.</li>
+    <li>And what helps most: if your bank alerts you about a payment and it <strong>does not
+    appear</strong>, the Captures tab has a “Share format” button that sends a template of the alert
+    <strong>without any of your data</strong>. That is what it takes for the app to learn your bank.</li>
+  </ul>
+
+  <h2 style="margin-top:44px">Ask to join</h2>
+  <p style="max-width:620px">
+    Play enrols testers <strong>by email address</strong>: there is no other way to let someone into a
+    closed test. It has to be the address of the <strong>Google account</strong> you use for Play on
+    your phone.
+  </p>
+  <p style="max-width:620px">
+    This page <strong>does not send it for you</strong>. Type your address below and the button opens
+    your own mail app with the message already written, so you send it yourself and see exactly what
+    goes out. There is no server here, no captcha and nothing stored: the rest of this site asks for
+    no data of yours, and this page is not going to be the exception.
+  </p>
+
+  <form id="formulario" autocomplete="off">
+    <div class="campo">
+      <label for="correo">Google account</label>
+      <input id="correo" name="correo" type="email" maxlength="120" required
+             autocomplete="email" placeholder="your-account@gmail.com">
+      <p class="ayuda">It does not have to be a <code>gmail.com</code> address: any address can be a
+      Google account. What matters is that it is the one you have set up in Play.</p>
+    </div>
+
+    <p class="ayuda" style="margin-bottom:10px">This is what will be written:</p>
+    <pre id="vista">To: support@xtracto.app
+Subject: Xtracto closed test — please enrol me
+
+Hello: I would like to join the Xtracto closed test.
+My Google account is: <span class="marcador" id="vista-correo">&lt;your address&gt;</span></pre>
+
+    <button type="submit" class="boton" id="enviar" style="margin-top:22px">Write the email</button>
+    <div class="alerta" id="resultado"></div>
+
+    <p class="ayuda" style="margin-top:28px">
+      If the button does nothing, your browser has no mail app associated with it; in that case just
+      write to <a href="mailto:support@xtracto.app">support@xtracto.app</a> with that address, in
+      whatever words you like. <strong>And if you write from that same account, you need not include
+      it</strong>: it is already in the sender.
+    </p>
+    <p class="ayuda">
+      I read that email myself, it is used to enrol you in Play and it is deleted once you are in.
+      There is no mailing list and you will receive nothing else. I do the enrolment by hand, so it may
+      take a few hours: you will not get a reply, come back to this page and try the link above. See
+      the <a href="privacidad.html#en">privacy policy</a>.
+    </p>
+  </form>
+</div>
+
+<footer style="margin-top:56px">
+  <div class="envoltorio">
+    <p>Xtracto · Built to work offline · <a href="privacidad.html#en">Privacy</a> · <a href="mailto:support@xtracto.app">support@xtracto.app</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

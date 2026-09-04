@@ -7,15 +7,15 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/en.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/bancos.html</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/banks.html</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/check-permissions.html</loc>
@@ -25,15 +25,23 @@
     <lastmod>2026-09-02</lastmod>
   </url>
   <url>
+    <loc>https://xtracto.app/closed-test.html</loc>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
     <loc>https://xtracto.app/en.html</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/en.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/privacidad.html</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://xtracto.app/prueba-cerrada.html</loc>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/verificar-permisos.html</loc>
