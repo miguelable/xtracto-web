@@ -49,7 +49,8 @@
         <tr><th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Bank</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Application id</th><th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Which alerts it recognises</th></tr>
         <tr><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)" class="entidad"><strong>Caja Rural · Ruralvía</strong></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><code>com.rsi.nba</code></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Card payment, Direct debit<br><span class="apunte">The Spanish rural banks that operate through Ruralvía share this application, so it covers all of them.</span></td></tr>
         <tr><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)" class="entidad"><strong>Google Wallet</strong></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><code>com.google.android.apps.walletnfcrel</code></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Card payment<br><span class="apunte">Phone payments, whichever card you have inside.</span></td></tr>
-        <tr><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)" class="entidad"><strong>Trade Republic</strong></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><code>de.traderepublic.app</code></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Card payment, Cancelled payment<br><span class="apunte">It also recognises the alert that a charge has been cancelled, to strike through the movement already recorded.</span></td></tr>
+        <tr><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)" class="entidad"><strong>Revolut</strong></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><code>com.revolut.revolut</code></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Card payment<br><span class="apunte">Payments with the Revolut card. The alert is recognised just the same when it carries the pocket balance after it.</span></td></tr>
+        <tr><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)" class="entidad"><strong>Trade Republic</strong></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><code>de.traderepublic.app</code></td><td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Card payment, Cancelled payment<br><span class="apunte">It recognises purchases in another currency —recording the euro amount, which is what you are charged— and the alert that a charge has been cancelled, to strike through the movement already recorded.</span></td></tr>
       </table>
     </div>
     <div class="aviso" style="margin-top:26px"><p style="margin:0">Recognising an alert is not connecting to a bank. Xtracto asks for no credentials, does not use Open Banking and cannot read your real balance: it only reads notifications you already receive.</p></div>
@@ -59,15 +60,9 @@
 <section>
   <div class="envoltorio">
     <h2>Yours is not there?</h2>
-    <p>There are two different situations, and they are not fixed the same way.</p>
-
-    <h3 style="margin-top:26px">Your bank does not appear in Settings</h3>
-    <p>Then Xtracto is <strong>not reading anything</strong> from that app. It can only read notifications from the apps in its catalogue, and if yours is not in it, not a single alert is stored: there is nothing to send us yet. Ask us for it and we will add it — <strong>the bank's name is enough</strong>.</p>
-    <p style="margin-top:22px"><a class="boton" href="request-a-bank.html">Request my bank</a></p>
-
-    <h3 style="margin-top:34px">Your bank does appear, but its alerts don't become expenses</h3>
-    <p>That means the app stores the alert but does not understand its format yet: you will see it in the <strong>Captures</strong> tab as "Unparsed". From there you can send us the message template <strong>without sending us any of your data</strong>: before anything is shared, it replaces amounts, dates, merchants and numbers with placeholders and shows you exactly what will go out.</p>
-    <p style="margin-top:22px"><a class="boton secundario" href="format.html">Send my bank's format</a></p>
+    <p>If your bank uses another format, the app will tell you: it stores the alert without interpreting it and you can send us the message template <strong>without sending us any of your data</strong>. Before anything is shared, it replaces amounts, dates, merchants and numbers with placeholders and shows you exactly what will go out.</p>
+    <p>And the app is useful to you in the meantime: you can enter an expense by hand —the amount, who it went to and the date—, and if the bank alert for that same payment arrives later, it replaces your entry instead of duplicating it.</p>
+    <p style="margin-top:22px"><a class="boton" href="format.html">Send my bank's format</a></p>
   </div>
 </section>
 

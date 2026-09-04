@@ -74,7 +74,7 @@
           "name": "¿Es seguro darle acceso a las notificaciones?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Es el permiso más delicado que pide y merece una respuesta honesta. Con él, Android deja que Xtracto vea las notificaciones que llegan al móvil. Xtracto solo mira las de una lista cerrada de aplicaciones financieras que puedes consultar dentro de la propia app; de las demás no lee ni guarda nada, así que tus mensajes, tu correo y tus redes sociales se descartan sin tocarse. Y como la app no puede salir a internet, lo que lee no tiene a dónde ir. Puedes retirar el permiso cuando quieras desde los ajustes de Android."
+            "text": "Es el permiso más delicado que pide y merece una respuesta honesta. Con él, Android deja que Xtracto vea las notificaciones que llegan al móvil. Xtracto solo mira las de un catálogo cerrado de 216 aplicaciones financieras, y dentro de ese catálogo decides tú una a una a cuáles hace caso, desde Ajustes. Apagar una no es dejar de mostrarla: el servicio ni siquiera abre sus notificaciones. De las demás apps del teléfono no lee ni guarda nada, así que tus mensajes, tu correo y tus redes sociales se descartan sin tocarse. Y como la app no puede salir a internet, lo que lee no tiene a dónde ir. Puedes retirar el permiso cuando quieras desde los ajustes de Android."
           }
         },
         {
@@ -91,6 +91,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Un conjunto concreto de entidades, que crece con los formatos que envía la gente. Si el tuyo no está, la app te lo dirá: guardará el aviso sin interpretarlo y podrás mandarnos la plantilla del mensaje sin mandarnos ni un dato tuyo, porque antes sustituye importes, fechas, comercios y números por marcadores."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo apuntar un gasto a mano?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Hay un botón para apuntar a mano lo que ninguna app avisa —un Bizum enviado, un pago en efectivo—: el importe, a quién y la fecha. Si en los tres días siguientes llega la notificación del banco de ese mismo importe, sustituye a tu apunte en vez de duplicarlo. Es también la forma de llevar tus gastos mientras tu banco no esté reconocido."
           }
         },
         {
@@ -161,7 +169,7 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
         <ul class="limpia nunca">
           <li><span class="marca-item">✕</span><span>Enviar nada a ningún servidor</span></li>
           <li><span class="marca-item">✕</span><span>Pedirte las claves de tu banco</span></li>
-          <li><span class="marca-item">✕</span><span>Leer notificaciones que no sean de las apps financieras de una lista cerrada</span></li>
+          <li><span class="marca-item">✕</span><span>Leer notificaciones de ninguna app que no hayas encendido tú en Ajustes</span></li>
           <li><span class="marca-item">✕</span><span>Subir tus datos a la copia de seguridad en la nube</span></li>
           <li><span class="marca-item">✕</span><span>Mostrar anuncios o pedirte una cuenta</span></li>
         </ul>
@@ -172,6 +180,7 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
           <li><span class="marca-item">✓</span><span>Guardar tus movimientos en una base local que ninguna otra app puede abrir</span></li>
           <li><span class="marca-item">✓</span><span>Ocultar la pantalla en capturas y en la vista de Recientes</span></li>
           <li><span class="marca-item">✓</span><span>Conservar el aviso original para que puedas comprobar cada importe</span></li>
+          <li><span class="marca-item">✓</span><span>Dejarte apuntar a mano lo que ninguna app avisa, como un Bizum enviado</span></li>
           <li><span class="marca-item">✓</span><span>Dejarte exportar todo a CSV cuando quieras</span></li>
           <li><span class="marca-item">✓</span><span>Borrarlo todo al desinstalar, porque no hay copia en ningún otro sitio</span></li>
         </ul>
@@ -255,10 +264,15 @@ aapt2 dump permissions xtracto.apk</pre>
     <h2>El acceso a notificaciones, explicado</h2>
     <p>
       Es el permiso más delicado que pide la app y merece una explicación honesta. Con él, Android
-      deja que Xtracto vea las notificaciones que aparecen en tu móvil. Xtracto solo mira las de una
-      <strong>lista cerrada de aplicaciones financieras</strong> que puedes consultar dentro de la
-      propia app, en Ajustes. De las demás no lee ni guarda nada: tus mensajes, tu correo y tus redes
-      sociales se descartan sin llegar a tocarse.
+      deja que Xtracto vea las notificaciones que aparecen en tu móvil. Xtracto solo mira las de un
+      <strong>catálogo cerrado de 216 aplicaciones financieras</strong>. De las demás no lee ni
+      guarda nada: tus mensajes, tu correo y tus redes sociales se descartan sin llegar a tocarse.
+    </p>
+    <p>
+      Y ese catálogo es el techo, no la lista. Dentro de la app, en Ajustes, están las 216 con un
+      interruptor cada una y <strong>decides tú a cuáles hace caso</strong>. Apagar una no es dejar
+      de mostrarla: el servicio ni siquiera abre sus notificaciones. Es la diferencia entre no
+      enseñar un dato y no tenerlo.
     </p>
     <p>
       Y como la app no puede salir a internet, lo que lee no tiene a dónde ir. Se queda en tu
@@ -288,6 +302,12 @@ en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span c
       Con la plantilla basta para añadir tu banco, y el envío es voluntario: la app te lleva al
       formulario con todo preparado, o eliges cualquier otra vía desde el selector del sistema.
     </p>
+    <p>
+      <strong>Y mientras tanto la app te sirve igual</strong>: puedes apuntar un gasto a mano
+      —importe, a quién y la fecha— para lo que ninguna app avisa, como un Bizum enviado. Si más
+      adelante llega la notificación del banco de ese mismo pago, sustituye a tu apunte en vez de
+      duplicarlo.
+    </p>
     <p style="margin-top:22px">
       <a class="boton" href="bancos.html">Ver qué bancos reconoce</a>
       <a class="boton secundario" href="pide-tu-banco.html">Pedir mi banco</a>
@@ -304,11 +324,13 @@ en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span c
       <h3>¿Necesita conexión a internet?</h3>
       <p>No, y además no puede tenerla: la app <strong>no declara el permiso <code>INTERNET</code></strong>. Funciona entera sin conexión, y aunque quisiera mandar tus datos a un servidor el sistema operativo se lo impediría. No es una promesa, es una limitación técnica que puedes comprobar tú mismo sobre el archivo instalado.</p>
       <h3>¿Es seguro darle acceso a las notificaciones?</h3>
-      <p>Es el permiso más delicado que pide y merece una respuesta honesta. Con él, Android deja que Xtracto vea las notificaciones que llegan al móvil. Xtracto solo mira las de una <strong>lista cerrada de aplicaciones financieras</strong> que puedes consultar dentro de la propia app; de las demás no lee ni guarda nada, así que tus mensajes, tu correo y tus redes sociales se descartan sin tocarse. Y como la app no puede salir a internet, lo que lee no tiene a dónde ir. Puedes retirar el permiso cuando quieras desde los ajustes de Android.</p>
+      <p>Es el permiso más delicado que pide y merece una respuesta honesta. Con él, Android deja que Xtracto vea las notificaciones que llegan al móvil. Xtracto solo mira las de un <strong>catálogo cerrado de 216 aplicaciones financieras</strong>, y dentro de ese catálogo <strong>decides tú una a una</strong> a cuáles hace caso, desde Ajustes. Apagar una no es dejar de mostrarla: el servicio ni siquiera abre sus notificaciones. De las demás apps del teléfono no lee ni guarda nada, así que tus mensajes, tu correo y tus redes sociales se descartan sin tocarse. Y como la app no puede salir a internet, lo que lee no tiene a dónde ir. Puedes retirar el permiso cuando quieras desde los ajustes de Android.</p>
       <h3>¿Dónde se guardan mis gastos?</h3>
       <p>En tu teléfono, en una base de datos local que ninguna otra aplicación puede abrir. No se suben a la copia de seguridad en la nube, puedes exportarlos a CSV cuando quieras, y al desinstalar se borran del todo, porque no hay copia en ningún otro sitio.</p>
       <h3>¿Qué bancos reconoce?</h3>
       <p>Un conjunto concreto de entidades, que crece con los formatos que envía la gente. Si el tuyo no está, la app te lo dirá: guardará el aviso sin interpretarlo y podrás mandarnos la plantilla del mensaje <strong>sin mandarnos ni un dato tuyo</strong>, porque antes sustituye importes, fechas, comercios y números por marcadores.</p>
+      <h3>¿Puedo apuntar un gasto a mano?</h3>
+      <p>Sí. Hay un botón para apuntar a mano lo que ninguna app avisa —un Bizum enviado, un pago en efectivo—: el importe, a quién y la fecha. Si en los tres días siguientes llega la notificación del banco de ese mismo importe, <strong>sustituye a tu apunte en vez de duplicarlo</strong>. Es también la forma de llevar tus gastos mientras tu banco no esté reconocido.</p>
       <h3>¿Hay versión para iPhone?</h3>
       <p>No, y por ahora no puede haberla: iOS no permite que una aplicación lea las notificaciones de otras, que es justo de lo que vive Xtracto. Es una limitación del sistema, no una decisión nuestra.</p>
       <h3>¿Cuándo se podrá descargar?</h3>
@@ -344,7 +366,7 @@ en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span c
 
 <footer>
   <div class="envoltorio">
-    <p>Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a></p>
+    <p>Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a> · <a href="mailto:support@xtracto.app">support@xtracto.app</a></p>
   </div>
 </footer>
 

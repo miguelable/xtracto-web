@@ -44,11 +44,18 @@ SOPORTADOS: list[tuple[str, str, list[str], dict[str, str]]] = [
     ('Google Wallet', 'com.google.android.apps.walletnfcrel', ['compra'], {
         'es': 'Los pagos con el móvil, sea cual sea la tarjeta que tengas dentro.',
         'en': 'Phone payments, whichever card you have inside.'}),
+    ('Revolut', 'com.revolut.revolut', ['compra'], {
+        'es': 'Los pagos con la tarjeta de Revolut. El aviso se reconoce igual cuando trae detrás '
+              'el saldo del monedero.',
+        'en': 'Payments with the Revolut card. The alert is recognised just the same when it carries '
+              'the pocket balance after it.'}),
     ('Trade Republic', 'de.traderepublic.app', ['compra', 'devolucion'], {
-        'es': 'Reconoce también el aviso de que un cobro se anula, para tachar el movimiento ya '
+        'es': 'Reconoce las compras en otra moneda \u2014y apunta el importe en euros, que es el que '
+              'se te cobra\u2014, y el aviso de que un cobro se anula, para tachar el movimiento ya '
               'registrado.',
-        'en': 'It also recognises the alert that a charge has been cancelled, to strike through the '
-              'movement already recorded.'}),
+        'en': 'It recognises purchases in another currency \u2014recording the euro amount, which is '
+              'what you are charged\u2014 and the alert that a charge has been cancelled, to strike '
+              'through the movement already recorded.'}),
 ]
 
 TEXTOS = {
@@ -67,6 +74,9 @@ TEXTOS = {
               'podrás mandarnos la plantilla del mensaje <strong>sin mandarnos ni un dato tuyo</strong>. '
               'Antes de compartir nada, sustituye importes, fechas, comercios y números por marcadores '
               'y te enseña exactamente el texto que va a salir.',
+        manual='Y mientras tanto la app te sirve igual: puedes apuntar un gasto a mano '
+               '\u2014importe, a quién y la fecha\u2014, y si más adelante llega la notificación del '
+               'banco de ese mismo pago, sustituye a tu apunte en vez de duplicarlo.',
         boton='Enviar el formato de mi banco', destino='formato.html',
         pie='Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a>',
         nota='Reconocer un aviso no es conectarse al banco. Xtracto no pide credenciales, no usa Open '
@@ -86,6 +96,9 @@ TEXTOS = {
               'interpreting it and you can send us the message template <strong>without sending us any '
               'of your data</strong>. Before anything is shared, it replaces amounts, dates, merchants '
               'and numbers with placeholders and shows you exactly what will go out.',
+        manual='And the app is useful to you in the meantime: you can enter an expense by hand '
+               '\u2014the amount, who it went to and the date\u2014, and if the bank alert for that '
+               'same payment arrives later, it replaces your entry instead of duplicating it.',
         boton="Send my bank's format", destino='format.html',
         pie='Xtracto · Built to work offline · <a href="privacidad.html#en">Privacy</a>',
         nota='Recognising an alert is not connecting to a bank. Xtracto asks for no credentials, does '
@@ -153,6 +166,7 @@ PLANTILLA = '''<!doctype html>
   <div class="envoltorio">
     <h2>{h2_falta}</h2>
     <p>{falta}</p>
+    <p>{manual}</p>
     <p style="margin-top:22px"><a class="boton" href="{destino}">{boton}</a></p>
   </div>
 </section>

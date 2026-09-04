@@ -74,7 +74,7 @@
           "name": "Is it safe to grant notification access?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It is the most sensitive permission the app asks for and it deserves an honest answer. With it, Android lets Xtracto see the notifications that arrive on your phone. Xtracto only looks at those from a fixed list of finance applications that you can review inside the app; it reads and stores nothing from the rest, so your messages, your email and your social networks are discarded untouched. And because the app cannot reach the internet, what it reads has nowhere to go. You can revoke the permission whenever you want from Android settings."
+            "text": "It is the most sensitive permission the app asks for and it deserves an honest answer. With it, Android lets Xtracto see the notifications that arrive on your phone. Xtracto only looks at those from a closed catalogue of 216 finance applications, and within that catalogue you decide one by one which ones it listens to, under Settings. Switching one off is not hiding it: the service does not even open its notifications. It reads and stores nothing from the rest of the phone, so your messages, your email and your social networks are discarded untouched. And because the app cannot reach the internet, what it reads has nowhere to go. You can revoke the permission whenever you want from Android settings."
           }
         },
         {
@@ -91,6 +91,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "A specific set of banks, which grows with the formats people send in. If yours is not there, the app will tell you: it stores the alert without interpreting it and you can send us the message template without sending us any of your data, because it replaces amounts, dates, merchants and numbers with placeholders first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I enter an expense by hand?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. There is a button to enter by hand whatever no app announces —a payment you sent to a friend, a cash purchase—: the amount, who it went to and the date. If the bank alert for that same amount arrives within the next three days, it replaces your entry instead of duplicating it. It is also how you keep track of your spending while your bank is not recognised yet."
           }
         },
         {
@@ -161,7 +169,7 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
         <ul class="limpia nunca">
           <li><span class="marca-item">✕</span><span>Send anything to any server</span></li>
           <li><span class="marca-item">✕</span><span>Ask for your banking credentials</span></li>
-          <li><span class="marca-item">✕</span><span>Read notifications from anything but a fixed list of finance apps</span></li>
+          <li><span class="marca-item">✕</span><span>Read notifications from any app you have not switched on yourself in Settings</span></li>
           <li><span class="marca-item">✕</span><span>Upload your data to cloud backup</span></li>
           <li><span class="marca-item">✕</span><span>Show ads or ask you to register</span></li>
         </ul>
@@ -172,6 +180,7 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
           <li><span class="marca-item">✓</span><span>Keep your movements in a local database no other app can open</span></li>
           <li><span class="marca-item">✓</span><span>Hide the screen from screenshots and the Recents view</span></li>
           <li><span class="marca-item">✓</span><span>Keep the original alert so you can check every amount</span></li>
+          <li><span class="marca-item">✓</span><span>Let you enter by hand whatever no app announces, like a payment you sent to a friend</span></li>
           <li><span class="marca-item">✓</span><span>Let you export everything to CSV</span></li>
           <li><span class="marca-item">✓</span><span>Delete everything on uninstall, because there is no copy anywhere else</span></li>
         </ul>
@@ -256,9 +265,15 @@ aapt2 dump permissions xtracto.apk</pre>
     <p>
       This is the most sensitive permission the app asks for and it deserves an honest explanation.
       With it, Android lets Xtracto see the notifications that appear on your phone. Xtracto only
-      looks at those from a <strong>fixed list of finance applications</strong>, which you can review
-      inside the app under Settings. It reads and stores nothing from the rest: your messages, your
-      email and your social networks are discarded untouched.
+      looks at those from a <strong>closed catalogue of 216 finance applications</strong>. It reads
+      and stores nothing from the rest: your messages, your email and your social networks are
+      discarded untouched.
+    </p>
+    <p>
+      And that catalogue is the ceiling, not the list. Inside the app, under Settings, all 216 have a
+      switch each and <strong>you decide which ones it listens to</strong>. Switching one off is not
+      hiding it: the service does not even open its notifications. That is the difference between not
+      showing a piece of data and not holding it.
     </p>
     <p>
       And because the app cannot reach the internet, what it reads has nowhere to go. It stays on
@@ -288,6 +303,12 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
       The template alone is enough to add your bank, and sending is voluntary: the app takes you to
       the form with everything prepared, or you pick any other route from the system share sheet.
     </p>
+    <p>
+      <strong>And the app is useful to you in the meantime</strong>: you can enter an expense by hand
+      —the amount, who it went to and the date— for whatever no app announces, like a payment you
+      sent to a friend. If the bank alert for that same payment arrives later, it replaces your entry
+      instead of duplicating it.
+    </p>
     <p style="margin-top:22px">
       <a class="boton" href="banks.html">See which banks it recognises</a>
       <a class="boton secundario" href="request-a-bank.html">Request my bank</a>
@@ -304,11 +325,13 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
       <h3>Does it need an internet connection?</h3>
       <p>No, and it cannot have one: the app <strong>declares no <code>INTERNET</code> permission</strong>. It works entirely offline, and even if it wanted to send your data to a server the operating system would stop it. That is not a promise, it is a technical limitation you can verify yourself on the installed file.</p>
       <h3>Is it safe to grant notification access?</h3>
-      <p>It is the most sensitive permission the app asks for and it deserves an honest answer. With it, Android lets Xtracto see the notifications that arrive on your phone. Xtracto only looks at those from a <strong>fixed list of finance applications</strong> that you can review inside the app; it reads and stores nothing from the rest, so your messages, your email and your social networks are discarded untouched. And because the app cannot reach the internet, what it reads has nowhere to go. You can revoke the permission whenever you want from Android settings.</p>
+      <p>It is the most sensitive permission the app asks for and it deserves an honest answer. With it, Android lets Xtracto see the notifications that arrive on your phone. Xtracto only looks at those from a <strong>closed catalogue of 216 finance applications</strong>, and within that catalogue <strong>you decide one by one</strong> which ones it listens to, under Settings. Switching one off is not hiding it: the service does not even open its notifications. It reads and stores nothing from the rest of the phone, so your messages, your email and your social networks are discarded untouched. And because the app cannot reach the internet, what it reads has nowhere to go. You can revoke the permission whenever you want from Android settings.</p>
       <h3>Where is my spending data stored?</h3>
       <p>On your phone, in a local database no other application can open. It is not uploaded to cloud backup, you can export it to CSV whenever you want, and uninstalling deletes it completely, because there is no copy anywhere else.</p>
       <h3>Which banks does it recognise?</h3>
       <p>A specific set of banks, which grows with the formats people send in. If yours is not there, the app will tell you: it stores the alert without interpreting it and you can send us the message template <strong>without sending us any of your data</strong>, because it replaces amounts, dates, merchants and numbers with placeholders first.</p>
+      <h3>Can I enter an expense by hand?</h3>
+      <p>Yes. There is a button to enter by hand whatever no app announces —a payment you sent to a friend, a cash purchase—: the amount, who it went to and the date. If the bank alert for that same amount arrives within the next three days, it <strong>replaces your entry instead of duplicating it</strong>. It is also how you keep track of your spending while your bank is not recognised yet.</p>
       <h3>Is there an iPhone version?</h3>
       <p>No, and for now there cannot be: iOS does not let an application read other apps’ notifications, which is exactly what Xtracto lives on. It is a limitation of the system, not a decision of ours.</p>
       <h3>When will it be available to download?</h3>
@@ -345,7 +368,7 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
 
 <footer>
   <div class="envoltorio">
-    <p>Xtracto · Built to work offline · <a href="privacidad.html">Privacy</a></p>
+    <p>Xtracto · Built to work offline · <a href="privacidad.html#en">Privacy</a> · <a href="mailto:support@xtracto.app">support@xtracto.app</a></p>
   </div>
 </footer>
 
