@@ -8,7 +8,7 @@
 
 [xtracto.app](https://xtracto.app) · [English](https://xtracto.app/en.html) · [Política de privacidad](https://xtracto.app/privacidad.html)
 
-`En desarrollo` — todavía no se puede descargar
+`En prueba cerrada` — [pide entrar en la prueba](https://xtracto.app/prueba-cerrada.html)
 
 </div>
 
@@ -36,13 +36,16 @@ todo lo que dice esta página sería mentira. No aparece.
 
 ## Qué hace
 
-- Lee los avisos de una **lista cerrada de aplicaciones financieras** y extrae el importe, el
-  comercio, la tarjeta y la fecha. De las demás notificaciones no lee ni guarda nada.
+- Lee los avisos de un **catálogo cerrado de 216 aplicaciones financieras** —y dentro de él,
+  **eliges tú una a una** cuáles vigila— y extrae el importe, el comercio, la tarjeta y la fecha. De
+  las demás notificaciones no lee ni guarda nada; de las que apagas, ni siquiera abre el contenido.
 - Guarda los movimientos en una **base de datos local** que ninguna otra app puede abrir.
 - Te enseña el total del mes, el desglose por tarjeta comparado con el mes anterior, y el historial
   completo con buscador.
 - Conserva el aviso original para que puedas comprobar cada importe.
 - Oculta la pantalla en las capturas y en la vista de Recientes.
+- Te deja **apuntar a mano** lo que ninguna app avisa, como un Bizum enviado. Si luego llega el
+  aviso del banco de ese mismo pago, sustituye a tu apunte en vez de duplicarlo.
 - Te deja exportarlo todo a CSV cuando quieras.
 - Se borra entero al desinstalar, porque no hay copia en ningún otro sitio.
 
@@ -54,15 +57,18 @@ la copia de seguridad en la nube, mostrar anuncios o pedirte una cuenta.
 
 ## Capturas
 
-<!--
-  Pendientes. Ponlas en `capturas/` y enlázalas aquí. Lo que mejor cuenta la app, por orden:
-    1. La pantalla principal con el total del mes y el desglose por tarjeta.
-    2. El historial con el buscador.
-    3. La pantalla de Capturas con un aviso ya ofuscado, que es la que explica la privacidad.
-  Comprueba que no quede ningún importe ni número de tarjeta real antes de subirlas.
--->
+<div align="center">
 
-_Próximamente._
+<img src="capturas/resumen-es.webp" width="200" alt="Pantalla de Resumen: el total del mes, 653,44 € en 32 movimientos, el desglose por tarjeta y los últimos gastos.">
+<img src="capturas/movimientos-es.webp" width="200" alt="Pantalla de Movimientos: el historial agrupado por día, con buscador y filtros, y en cada línea el comercio, la tarjeta y la app que avisó.">
+<img src="capturas/capturas-es.webp" width="200" alt="Pantalla de Capturas: el archivo de los avisos recibidos, con el texto original de los que el parser todavía no interpreta.">
+<img src="capturas/ajustes-es.webp" width="200" alt="Pantalla de Ajustes: el acceso a notificaciones concedido, el reprocesado del archivo y el botón de exportar a CSV.">
+
+</div>
+
+Los importes y los comercios son **inventados**: las capturas se hacen en un emulador con datos de
+prueba, nunca sobre el teléfono de nadie, que es donde hay dinero real. Se preparan para la web con
+`python3 capturas/preparar.py` a partir de las que van a la ficha de Google Play.
 
 ## Si tu banco no está soportado
 
@@ -82,7 +88,10 @@ en tu cuenta <cuenta> por importe de <importe>
 ```
 
 Con la plantilla basta para añadir tu banco. **Puedes mandarla desde
-[xtracto.app/formato.html](https://xtracto.app/formato.html) sin registrarte en nada.**
+[xtracto.app/formato.html](https://xtracto.app/formato.html) sin registrarte en nada**, y si tu banco
+ni siquiera está en el catálogo —entonces no hay ningún aviso que copiar— pídelo en
+[xtracto.app/pide-tu-banco.html](https://xtracto.app/pide-tu-banco.html), que con el nombre basta.
+Mientras tanto, el apunte a mano hace que la app te sirva igual.
 
 Se publica como una incidencia pública en este repositorio, así que no debe llevar ni un solo número
 real: un robot revisa cada envío y avisa si detecta cifras.
