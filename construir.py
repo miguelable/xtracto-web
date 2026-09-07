@@ -39,9 +39,26 @@ CABECERA = """<!doctype html>
 <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
+
+<nav class="navegacion" aria-label="Secciones del sitio">
+  <div class="envoltorio">
+    <a class="marca-nav" href="index.html"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menú">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="sin-conectar-el-banco.html">Sin conectar el banco</a></li>
+        <li><a href="bancos.html">Bancos</a></li>
+        <li><a href="verificar-permisos.html">Verifícalo</a></li>
+        <li><a href="privacidad.html" aria-current="page">Privacidad</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="privacidad.html#es" hreflang="es" lang="es" title="Español" class="activo">ES</a><span aria-hidden="true">·</span><a href="privacidad.html#en" hreflang="en" lang="en" title="English">EN</a></div>
+    </div>
+    <a class="boton compacto" href="prueba-cerrada.html">Probar la app</a>
+  </div>
+</nav>
+
 <div class="envoltorio" style="padding-top:40px;padding-bottom:64px">
-<div class="idiomas" style="padding-top:0"><a href="#es">Español</a> · <a href="#en">English</a></div>
-<p><a href="index.html">&larr; Xtracto</a></p>
 """
 
 PIE = """</div>

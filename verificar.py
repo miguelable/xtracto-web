@@ -14,6 +14,8 @@ que salió cada uno:
   · Las tipografías se sirven desde el propio sitio. Que vuelva a colarse una llamada a Google
     contradice lo que la portada afirma sobre la app.
   · Un enlace o una imagen rotos no rompen nada visiblemente, y por eso duran meses.
+  · La barra de navegación está copiada en cada página, y dos de ellas son generadas: si una
+    se queda atrás, manda a la gente a donde no debe o la deja sin salida.
 """
 import json
 import re
@@ -183,11 +185,44 @@ def sitemap_coherente():
             mal('sitemap', f'sobran (¿noindex?) {sorted(listadas - deberian)}')
 
 
+def la_misma_barra_en_todas():
+    """La barra de navegación es idéntica en las trece páginas.
+
+    Vive copiada en cada fichero porque el sitio no tiene build, y dos de las páginas —`bancos.html`
+    y `privacidad.html`— son generadas: la suya sale de `bancos.py` y de `construir.py`, y puede
+    quedarse atrás sin que nada chille. Es el mismo fallo que ya vigila la cabecera de la política,
+    y aquí saldría más caro: una página con la barra vieja manda a la gente a donde no debe, o la
+    deja sin salida, que es de donde venimos.
+    """
+    barras = {}
+    for f in paginas():
+        m = re.search(r'<nav class="navegacion".*?</nav>', texto(f), re.S)
+        if not m:
+            mal('barra', f'{f} no lleva navegación')
+            continue
+        # Dos cosas cambian legítimamente de una página a otra: cuál va marcada como actual, y el
+        # conmutador de idioma, que apunta a la gemela de cada una y por eso nunca es igual. Que
+        # esos enlaces existan y resuelvan ya lo comprueban `referencias resuelven` y `hreflang`.
+        barra = re.sub(r'<div class="idiomas-nav">.*?</div>', '', m.group(0), flags=re.S)
+        barras[f] = barra.replace(' aria-current="page"', '')
+
+    for referencia, iguales in (('index.html', 'es'), ('en.html', 'en')):
+        if referencia not in barras:
+            continue
+        for f, barra in barras.items():
+            # El idioma se decide por el conmutador que ya lleva cada página, no por su nombre.
+            propio = 'en' if re.search(r'<html lang="en"', texto(f)) else 'es'
+            if propio == iguales and barra != barras[referencia]:
+                mal('barra', f'{f} y {referencia} no llevan la misma; '
+                             'si es generada, regenérala; si no, cópiala tal cual')
+
+
 def main():
     for comprobacion in (referencias_resuelven, canonicals_y_alternativas, cabecera_de_la_politica,
                          nada_de_google, todas_con_csp, json_ld_valido,
                          faq_coincide_con_la_pagina, titulos_y_descripciones,
-                         imagenes_con_alt, sitemap_coherente):
+                         imagenes_con_alt, sitemap_coherente,
+                         la_misma_barra_en_todas):
         comprobacion()
         print(f'  · {comprobacion.__name__.replace("_", " ")}')
     if fallos:

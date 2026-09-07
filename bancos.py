@@ -58,9 +58,50 @@ SOPORTADOS: list[tuple[str, str, list[str], dict[str, str]]] = [
               'through the movement already recorded.'}),
 ]
 
+# La barra de navegacion, igual que en las paginas escritas a mano. `verificar.py`
+# comprueba que no se separen: esta pagina es generada y su barra podria quedarse
+# atras sin que nada chille, que es lo que ya pasaba con la cabecera de la politica.
+BARRA_ES = '''<nav class="navegacion" aria-label="Secciones del sitio">
+  <div class="envoltorio">
+    <a class="marca-nav" href="index.html"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menú">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="sin-conectar-el-banco.html">Sin conectar el banco</a></li>
+        <li><a href="bancos.html" aria-current="page">Bancos</a></li>
+        <li><a href="verificar-permisos.html">Verifícalo</a></li>
+        <li><a href="privacidad.html">Privacidad</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="bancos.html" hreflang="es" lang="es" title="Español" class="activo">ES</a><span aria-hidden="true">·</span><a href="banks.html" hreflang="en" lang="en" title="English">EN</a></div>
+    </div>
+    <a class="boton compacto" href="prueba-cerrada.html">Probar la app</a>
+  </div>
+</nav>
+'''
+BARRA_EN = '''<nav class="navegacion" aria-label="Site sections">
+  <div class="envoltorio">
+    <a class="marca-nav" href="en.html"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menu">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="without-linking-your-bank.html">Without linking</a></li>
+        <li><a href="banks.html" aria-current="page">Banks</a></li>
+        <li><a href="check-permissions.html">Check it</a></li>
+        <li><a href="privacidad.html#en">Privacy</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="bancos.html" hreflang="es" lang="es" title="Español">ES</a><span aria-hidden="true">·</span><a href="banks.html" hreflang="en" lang="en" title="English" class="activo">EN</a></div>
+    </div>
+    <a class="boton compacto" href="closed-test.html">Try the app</a>
+  </div>
+</nav>
+'''
+
 TEXTOS = {
     'es': dict(
         fichero='bancos.html', otro='banks.html', lang='es', og='og.png',
+        barra=BARRA_ES,
         titulo='Bancos y apps que Xtracto reconoce',
         desc='Lista de entidades cuyos avisos entiende Xtracto, con el identificador de cada app. '
              'Si el tuyo no está, puedes enviarnos el formato sin enviarnos tus datos.',
@@ -83,6 +124,7 @@ TEXTOS = {
              'Banking y no puede consultar tu saldo real: solo lee las notificaciones que ya recibes.'),
     'en': dict(
         fichero='banks.html', otro='bancos.html', lang='en', og='og-en.png',
+        barra=BARRA_EN,
         titulo='Banks and apps Xtracto recognises',
         desc='The banks whose alerts Xtracto understands, with each app identifier. If yours is not '
              'there, you can send us the format without sending us your data.',
@@ -137,13 +179,9 @@ PLANTILLA = '''<!doctype html>
 </head>
 <body>
 
-<div class="envoltorio">
-  <div class="idiomas"><a href="bancos.html"{act_es}>Español</a> · <a href="banks.html"{act_en}>English</a></div>
-</div>
-
+{barra}
 <header class="principal" style="padding:40px 0 48px;text-align:left">
   <div class="envoltorio">
-    <p><a href="{volver}">&larr; {volver_txt}</a></p>
     <h1 style="font-size:clamp(28px,5vw,40px);margin-top:18px">{h1}</h1>
     <p class="entradilla" style="margin:0">{entradilla}</p>
   </div>

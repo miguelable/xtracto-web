@@ -28,13 +28,32 @@
 </head>
 <body>
 
-<div class="envoltorio">
-  <div class="idiomas"><a href="verificar-permisos.html">Español</a> · <a href="check-permissions.html" class="activo">English</a></div>
-</div>
+<nav class="navegacion" aria-label="Site sections">
+  <div class="envoltorio">
+    <a class="marca-nav" href="en.html"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menu">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="without-linking-your-bank.html">Without linking</a></li>
+        <li><a href="banks.html">Banks</a></li>
+        <li><a href="check-permissions.html" aria-current="page">Check it</a></li>
+        <li><a href="privacidad.html#en">Privacy</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="verificar-permisos.html" hreflang="es" lang="es" title="Español">ES</a><span aria-hidden="true">·</span><a href="check-permissions.html" hreflang="en" lang="en" title="English" class="activo">EN</a></div>
+    </div>
+    <a class="boton compacto" href="closed-test.html">Try the app</a>
+  </div>
+</nav>
+
+
+
+
+
+
 
 <header class="principal" style="padding:40px 0 48px;text-align:left">
   <div class="envoltorio">
-    <p><a href="en.html">&larr; Xtracto</a></p>
     <h1 style="font-size:clamp(28px,5vw,40px);margin-top:18px">How to check that an app cannot
     connect to the internet</h1>
     <p class="entradilla" style="margin:0">

@@ -125,9 +125,29 @@
 </head>
 <body>
 
-<div class="envoltorio">
-  <div class="idiomas"><a href="index.html">Español</a> · <a href="en.html" class="activo">English</a></div>
-</div>
+<nav class="navegacion" aria-label="Site sections">
+  <div class="envoltorio">
+    <a class="marca-nav" href="en.html" aria-current="page"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menu">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="without-linking-your-bank.html">Without linking</a></li>
+        <li><a href="banks.html">Banks</a></li>
+        <li><a href="check-permissions.html">Check it</a></li>
+        <li><a href="privacidad.html#en">Privacy</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="index.html" hreflang="es" lang="es" title="Español">ES</a><span aria-hidden="true">·</span><a href="en.html" hreflang="en" lang="en" title="English" class="activo">EN</a></div>
+    </div>
+    <a class="boton compacto" href="closed-test.html">Try the app</a>
+  </div>
+</nav>
+
+
+
+
+
+
 
 <header class="principal">
   <div class="envoltorio">
@@ -141,10 +161,25 @@
       When your bank notifies a card payment or a direct debit, Xtracto reads that alert and turns it
       into a movement. Nothing to type, no bank to connect, no credentials handed to anyone.
     </p>
+    <p class="acciones-portada">
+      <a class="boton" href="closed-test.html">Join the closed test</a>
+      <a class="boton secundario" href="banks.html">See if your bank is there</a>
+    </p>
+    <nav class="indice" aria-label="On this page">
+      <ul>
+        <li><a href="#why-trust-it">Why trust it</a></li>
+        <li><a href="#check-it">Check it</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#the-permission">The permission</a></li>
+        <li><a href="#your-bank">Your bank</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#availability">Availability</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
-<section>
+<section id="why-trust-it">
   <div class="envoltorio">
     <h2>Why you can trust it</h2>
     <p>
@@ -161,6 +196,12 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
       nothing. <strong>There is no <code>INTERNET</code></strong>: even if the app wanted to send your
       data to a server, the operating system would stop it. No servers, no analytics, no ads, no
       sign-up, no login.
+    </p>
+    <p>
+      None of this would be possible while linking to your bank, which is how almost everything else
+      works. There are <a href="without-linking-your-bank.html">three ways to have your spending
+      record itself</a>, and what separates them is how much of your financial life a server that is
+      not yours gets to see.
     </p>
 
     <div class="rejilla dos" style="margin-top:28px">
@@ -189,7 +230,7 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
   </div>
 </section>
 
-<section>
+<section id="check-it">
   <div class="envoltorio">
     <h2>Check it yourself</h2>
     <p>
@@ -227,7 +268,7 @@ aapt2 dump permissions xtracto.apk</pre>
   </div>
 </section>
 
-<section>
+<section id="how-it-works">
   <div class="envoltorio">
     <h2>How it works</h2>
     <div class="pasos">
@@ -275,7 +316,7 @@ aapt2 dump permissions xtracto.apk</pre>
   </div>
 </section>
 
-<section>
+<section id="the-permission">
   <div class="envoltorio">
     <h2>Notification access, explained</h2>
     <p>
@@ -298,7 +339,7 @@ aapt2 dump permissions xtracto.apk</pre>
   </div>
 </section>
 
-<section>
+<section id="your-bank">
   <div class="envoltorio">
     <h2>If your bank is not supported</h2>
     <p>
@@ -332,7 +373,7 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
   </div>
 </section>
 
-<section>
+<section id="faq">
   <div class="envoltorio">
     <h2>Frequently asked questions</h2>
     <div class="faq">
@@ -356,7 +397,7 @@ has been charged to your account <span class="marcador">&lt;account&gt;</span></
   </div>
 </section>
 
-<section>
+<section id="availability">
   <div class="envoltorio">
     <h2>Availability</h2>
     <p>

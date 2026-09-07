@@ -125,9 +125,29 @@
 </head>
 <body>
 
-<div class="envoltorio">
-  <div class="idiomas"><a href="index.html" class="activo">Español</a> · <a href="en.html">English</a></div>
-</div>
+<nav class="navegacion" aria-label="Secciones del sitio">
+  <div class="envoltorio">
+    <a class="marca-nav" href="index.html" aria-current="page"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menú">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="sin-conectar-el-banco.html">Sin conectar el banco</a></li>
+        <li><a href="bancos.html">Bancos</a></li>
+        <li><a href="verificar-permisos.html">Verifícalo</a></li>
+        <li><a href="privacidad.html">Privacidad</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="index.html" hreflang="es" lang="es" title="Español" class="activo">ES</a><span aria-hidden="true">·</span><a href="en.html" hreflang="en" lang="en" title="English">EN</a></div>
+    </div>
+    <a class="boton compacto" href="prueba-cerrada.html">Probar la app</a>
+  </div>
+</nav>
+
+
+
+
+
+
 
 <header class="principal">
   <div class="envoltorio">
@@ -141,10 +161,25 @@
       Cuando tu banco te avisa de una compra o de un recibo, Xtracto lee ese aviso y lo convierte en
       un movimiento. Sin teclear nada, sin conectar tu banco y sin darle tus credenciales a nadie.
     </p>
+    <p class="acciones-portada">
+      <a class="boton" href="prueba-cerrada.html">Entrar en la prueba cerrada</a>
+      <a class="boton secundario" href="bancos.html">Ver si está tu banco</a>
+    </p>
+    <nav class="indice" aria-label="En esta página">
+      <ul>
+        <li><a href="#por-que-fiarte">Por qué fiarte</a></li>
+        <li><a href="#verificalo">Verifícalo</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#el-permiso">El permiso</a></li>
+        <li><a href="#tu-banco">Tu banco</a></li>
+        <li><a href="#preguntas">Preguntas</a></li>
+        <li><a href="#disponibilidad">Disponibilidad</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
-<section>
+<section id="por-que-fiarte">
   <div class="envoltorio">
     <h2>Por qué puedes fiarte</h2>
     <p>
@@ -161,6 +196,11 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
       <strong>No hay <code>INTERNET</code></strong>: aunque la app quisiera enviar tus datos a un
       servidor, el sistema operativo se lo impediría. No hay servidores, ni analítica, ni publicidad,
       ni registro, ni inicio de sesión.
+    </p>
+    <p>
+      Nada de esto sería posible conectándose a tu banco, que es como funciona casi todo lo demás.
+      Hay <a href="sin-conectar-el-banco.html">tres formas de que tus gastos se apunten solos</a>, y
+      la diferencia entre ellas es cuánto de tu vida financiera ve un servidor que no es tuyo.
     </p>
 
     <div class="rejilla dos" style="margin-top:28px">
@@ -189,7 +229,7 @@ uses-permission: name='app.xtracto.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'</pr
   </div>
 </section>
 
-<section>
+<section id="verificalo">
   <div class="envoltorio">
     <h2>Verifícalo tú mismo</h2>
     <p>
@@ -227,7 +267,7 @@ aapt2 dump permissions xtracto.apk</pre>
   </div>
 </section>
 
-<section>
+<section id="como-funciona">
   <div class="envoltorio">
     <h2>Cómo funciona</h2>
     <div class="pasos">
@@ -275,7 +315,7 @@ aapt2 dump permissions xtracto.apk</pre>
   </div>
 </section>
 
-<section>
+<section id="el-permiso">
   <div class="envoltorio">
     <h2>El acceso a notificaciones, explicado</h2>
     <p>
@@ -297,7 +337,7 @@ aapt2 dump permissions xtracto.apk</pre>
   </div>
 </section>
 
-<section>
+<section id="tu-banco">
   <div class="envoltorio">
     <h2>Si tu banco no está soportado</h2>
     <p>
@@ -331,7 +371,7 @@ en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span c
   </div>
 </section>
 
-<section>
+<section id="preguntas">
   <div class="envoltorio">
     <h2>Preguntas frecuentes</h2>
     <div class="faq">
@@ -355,7 +395,7 @@ en tu cuenta <span class="marcador">&lt;cuenta&gt;</span> por importe de <span c
   </div>
 </section>
 
-<section>
+<section id="disponibilidad">
   <div class="envoltorio">
     <h2>Disponibilidad</h2>
     <p>

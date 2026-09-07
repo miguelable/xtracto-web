@@ -61,7 +61,9 @@ body {
 
 .envoltorio { max-width: 780px; margin: 0 auto; padding: 0 24px; }
 
-header.principal { padding: 96px 0 72px; text-align: center; }
+/* 60px y no 96: con la barra encima, aquel vacio dejaba el titular y el boton mas
+   abajo de lo que hace falta para saber si esto te interesa. */
+header.principal { padding: 60px 0 72px; text-align: center; }
 
 .marca {
   display: inline-flex; align-items: center; gap: 14px;
@@ -211,6 +213,183 @@ footer {
 }
 footer a { color: var(--text-2); }
 
-.idiomas { text-align: right; padding-top: 20px; font-size: 14px; }
-.idiomas a { color: var(--text-3); }
-.idiomas a.activo { color: var(--text-1); font-weight: 600; }
+
+
+/*
+ * La barra de navegación.
+ *
+ * Antes no había ninguna. El sitio era una estrella con la portada en el centro: para ir de la
+ * lista de bancos a la guía de permisos había que volver atrás y encontrar el enlace dentro de un
+ * párrafo, y `privacidad.html` —la que abre todo el que llegue desde la ficha de Play— solo sabía
+ * volver a la portada.
+ *
+ * Sin JavaScript, y no por gusto: la CSP de estas páginas es `default-src 'none'` y no trae
+ * `script-src`. El desplegable de móvil lo abre un `checkbox` escondido, con su `label` de
+ * hamburguesa.
+ *
+ * **No es un `<details>`, y se intentó.** Un `<details>` cerrado no se puede abrir desde el CSS de
+ * fuera: el navegador esconde su contenido dentro de su shadow DOM, y ni `display`, ni
+ * `content-visibility`, ni `!important` lo revierten. Probadas las cuatro variantes en un navegador
+ * de verdad: en escritorio la barra se quedaba con la marca y el botón, y los enlaces no salían.
+ *
+ * El orden del DOM —marca, enlaces, idioma, botón— es el mismo que se ve en los dos anchos, así que
+ * tabular no da saltos hacia atrás. Es la razón de que el desplegable cuelgue en posición absoluta
+ * en vez de ocupar una segunda fila reordenada con `order`, que era lo de antes.
+ */
+.navegacion {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+/* Translúcida solo si el navegador sabe desenfocar. Sin el @supports, quien no lo soporte ve el
+   texto de la página pasando por debajo a través de la barra. */
+@supports (backdrop-filter: blur(1px)) {
+  .navegacion { background: rgba(10, 14, 16, 0.72); backdrop-filter: blur(12px); }
+}
+/* La barra no se encierra en los 780px del cuerpo: va de lado a lado, con la marca pegada a la
+   izquierda y el botón a la derecha. El tope de 1600px es para que en un monitor ancho no acaben
+   a dos palmos el uno del otro. */
+.navegacion .envoltorio {
+  max-width: 1600px; padding: 0 28px;
+  display: flex; align-items: center; gap: 22px; min-height: 60px;
+}
+
+.marca-nav {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 9px;
+  color: var(--text-1); font-weight: 800; letter-spacing: -0.4px;
+}
+.marca-nav:hover { text-decoration: none; }
+.marca-nav img { display: block; }
+
+/* Arriba no hace falta ningún interruptor: la barra entra entera. */
+.interruptor, .hamburguesa { display: none; }
+
+/* El panel ocupa el hueco entre la marca y el botón. min-width:0 para que pueda encogerse: sin eso
+   un hijo flex no baja de su contenido y el que cedía era el botón. */
+.panel {
+  display: flex; flex: 1 1 auto; min-width: 0;
+  align-items: center; gap: 22px;
+}
+/* Por encima de 820px la fila entra entera, así que esto no debería desplazarse nunca. Se queda de
+   red por si crece una etiqueta: mejor que se desplace en silencio que no que reviente la barra. */
+.panel > ul { overflow-x: auto; scrollbar-width: none; }
+.panel > ul::-webkit-scrollbar { display: none; }
+.panel > ul {
+  flex: 0 1 auto; min-width: 0;
+  list-style: none; margin: 0; padding: 0;
+  display: flex; gap: 22px;
+}
+.panel li { flex: 0 0 auto; }
+.panel a {
+  display: block; padding: 4px 0;
+  color: var(--text-2); font-size: 15px; font-weight: 600;
+  white-space: nowrap;
+}
+.panel a:hover { color: var(--text-1); text-decoration: none; }
+/* La página en la que estás, en blanco. El `aria-current` del HTML es quien lo dice: así el
+   marcador visual y el que anuncia el lector de pantalla no pueden separarse. */
+.panel a[aria-current="page"] { color: var(--text-1); }
+
+/*
+ * El conmutador de idioma, pegado al botón y no a los enlaces de sección, que son otra cosa.
+ *
+ * Antes colgaba suelto debajo de la barra, en una fila para él solo, y era la segunda cosa parecida
+ * a un menú en dos centímetros de pantalla. Abreviado a ES · EN porque con «Español · English» la
+ * fila se pasaba del ancho y se ponía a desplazarse también en escritorio; el nombre entero sigue
+ * estando en el `title` y en el `hreflang`.
+ */
+.idiomas-nav {
+  flex: 0 0 auto; margin-left: auto;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.panel > .idiomas-nav a { color: var(--text-3); font-size: 13.5px; letter-spacing: 0.3px; }
+.panel > .idiomas-nav a:hover { color: var(--text-1); }
+.panel > .idiomas-nav a.activo { color: var(--text-1); }
+.idiomas-nav span { color: var(--border); }
+
+.boton.compacto { flex: 0 0 auto; padding: 8px 15px; font-size: 14px; }
+/* En la propia página de la prueba, el botón era un azul brillante que prometía llevarte a algún
+   sitio y no llevaba a ninguno: ya estabas allí. Aquí se apaga y dice «estás aquí».
+   Con el `aria-current` que ya trae el marcado, para que la barra siga siendo idéntica en todas. */
+.boton.compacto[aria-current="page"] {
+  background: transparent; color: var(--text-1);
+  border: 1px solid var(--border);
+}
+.boton.compacto[aria-current="page"]:hover { filter: none; }
+
+/*
+ * Estrecho: los enlaces y el idioma se van a un desplegable, y en la barra solo quedan la marca, la
+ * hamburguesa y el botón. Repartirlo todo en una fila dejaba a los enlaces una ventana de 100px,
+ * que no es desplazable, es un acertijo; y en dos filas la barra se comía el alto de pantalla justo
+ * donde menos hay.
+ */
+/* 900px, y el número no es decorativo: la barra en español necesita unos 825px para entrar entera
+   —la marca, los cuatro enlaces, ES · EN y el botón—, y justo por encima de ese ancho los enlaces se
+   cortaban a bocajarro contra el conmutador, que parece un error y no una lista que se desplaza.
+   Los 75px que sobran son para cuando Manrope aún no ha cargado y el texto se dibuja con la
+   tipografía del sistema, que es más ancha. **Si añades un enlace o alargas una etiqueta, mide otra
+   vez y sube este número.** */
+@media (max-width: 900px) {
+  .navegacion .envoltorio { padding: 0 20px; gap: 14px; }
+
+  /* El `checkbox` se esconde sin dejar de recibir el foco: con `display:none` no se podría abrir el
+     menú con el teclado. Es la casilla la que lleva el nombre accesible, y el `label` solo dibuja. */
+  .interruptor {
+    position: absolute; width: 1px; height: 1px;
+    margin: 0; padding: 0; border: 0;
+    clip-path: inset(50%); overflow: hidden;
+  }
+  .hamburguesa {
+    display: flex; align-items: center;
+    margin-left: auto;
+    padding: 9px; margin-right: -9px;
+    color: var(--text-2); cursor: pointer;
+  }
+  .hamburguesa:hover { color: var(--text-1); }
+  .interruptor:checked ~ .hamburguesa { color: var(--text-1); }
+  /* El anillo de foco lo pinta el `label`, porque la casilla que lo recibe es invisible. */
+  .interruptor:focus-visible ~ .hamburguesa {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px;
+  }
+
+  /* Cerrado por defecto, y cuelga de la barra: al ser `sticky` ya es el marco de referencia. En
+     posición absoluta y no en una segunda fila, así el desplegable abierto no empuja la página. */
+  .panel { display: none; }
+  .interruptor:checked ~ .panel {
+    display: flex;
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 4px 20px 14px;
+  }
+  .panel > ul { flex-direction: column; gap: 0; overflow: visible; }
+  .panel > ul a { padding: 13px 0; font-size: 16px; border-bottom: 1px solid var(--border); }
+  .panel > .idiomas-nav { margin: 14px 0 0; }
+}
+
+/* La barra tapa 60px. Sin esto, un enlace a #como-funciona deja el h2 debajo de ella. */
+:target { scroll-margin-top: 76px; }
+
+/*
+ * El índice de la portada. Son siete secciones y cerca de mil palabras: quien llega buscando una
+ * cosa concreta —qué bancos, si el permiso es de fiar— no tiene por qué recorrerlas todas para
+ * encontrarla.
+ */
+.indice { margin-top: 30px; }
+.indice ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 9px; justify-content: center;
+}
+.indice a {
+  display: block;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 999px; padding: 7px 15px;
+  color: var(--text-2); font-size: 14px; font-weight: 600;
+}
+.indice a:hover { color: var(--text-1); border-color: var(--bg-active); text-decoration: none; }
+
+/* El primer botón de la portada estaba en la última sección, a mil palabras de la entradilla:
+   había que leerse la página entera para encontrar por dónde se prueba la app. */
+.acciones-portada { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }

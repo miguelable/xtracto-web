@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tracking spending without linking your bank</title>
+<meta name="description" content="The three ways your spending can record itself: bank aggregation, reading the alerts on your phone, and by hand. What each one needs and what it can see.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="canonical" href="https://xtracto.app/without-linking-your-bank.html">
+<link rel="alternate" hreflang="es" href="https://xtracto.app/sin-conectar-el-banco.html">
+<link rel="alternate" hreflang="en" href="https://xtracto.app/without-linking-your-bank.html">
+<link rel="alternate" hreflang="x-default" href="https://xtracto.app/sin-conectar-el-banco.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Xtracto">
+<meta property="og:url" content="https://xtracto.app/without-linking-your-bank.html">
+<meta property="og:title" content="Tracking spending without linking your bank">
+<meta property="og:description" content="The three ways your spending can record itself: bank aggregation, reading the alerts on your phone, and by hand. What each one needs and what it can see.">
+<meta property="og:image" content="https://xtracto.app/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<nav class="navegacion" aria-label="Site sections">
+  <div class="envoltorio">
+    <a class="marca-nav" href="en.html"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menu">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="without-linking-your-bank.html" aria-current="page">Without linking</a></li>
+        <li><a href="banks.html">Banks</a></li>
+        <li><a href="check-permissions.html">Check it</a></li>
+        <li><a href="privacidad.html#en">Privacy</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="sin-conectar-el-banco.html" hreflang="es" lang="es" title="Español">ES</a><span aria-hidden="true">·</span><a href="without-linking-your-bank.html" hreflang="en" lang="en" title="English" class="activo">EN</a></div>
+    </div>
+    <a class="boton compacto" href="closed-test.html">Try the app</a>
+  </div>
+</nav>
+
+<header class="principal" style="padding:40px 0 48px;text-align:left">
+  <div class="envoltorio">
+    <h1 style="font-size:clamp(28px,5vw,40px);margin-top:18px">Tracking your spending without
+    linking your bank</h1>
+    <p class="entradilla" style="margin:0">
+      There are three ways to have your spending record itself, and they are not interchangeable:
+      each asks something different of you and sees a different amount of your life. Here is how
+      they differ.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="envoltorio">
+    <h2>The three, in one table</h2>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;min-width:640px">
+        <tr>
+          <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">How</th>
+          <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">What you hand over</th>
+          <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">What it can see</th>
+          <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Works offline?</th>
+        </tr>
+        <tr>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><strong>Link the bank</strong></td>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Consent over your accounts, or your credentials outright</td>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Everything: balance, full history, every account and card</td>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">No</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)"><strong>Read the alerts</strong></td>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Notification access, granted on the phone itself</td>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Only what your bank tells you, from the day you install it</td>
+          <td style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)">Yes</td>
+        </tr>
+        <tr>
+          <td style="text-align:left;padding:10px 12px"><strong>By hand</strong></td>
+          <td style="text-align:left;padding:10px 12px">Your time</td>
+          <td style="text-align:left;padding:10px 12px">Nothing you do not type into it</td>
+          <td style="text-align:left;padding:10px 12px">Yes</td>
+        </tr>
+      </table>
+    </div>
+    <p class="apunte">That last column matters more than it looks: it says whether the app needs the
+    network to do its job, and therefore whether it is capable of sending anything to anyone.</p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>1 · Link the bank</h2>
+    <p>
+      This is what aggregators and nearly every well-known finance app do. You authorise it, and a
+      third party's server fetches the transactions from your accounts.
+    </p>
+    <p>
+      There are two versions, and the difference is large. <strong>Regulated</strong> providers use
+      the API the bank is obliged to offer: you are sent to your own bank's screen, you sign the
+      consent there, and the third party never sees your credentials. Providers that are not
+      regulated <strong>ask you for your username and password</strong> and log in as if they were
+      you, which is what <em>scraping</em> means. If a spending app asks for your bank credentials
+      inside its own screen, this is what it is doing.
+    </p>
+    <p>
+      It is neither a scam nor unusual: it is the only way to get <strong>complete accounts</strong>
+      —the real balance, the transactions from before you installed the app, and the accounts that
+      never notify you of anything. If what you want is to reconcile accounts properly or prepare a
+      tax return, you need this and not the other two.
+    </p>
+    <p>
+      The cost is specific: <strong>your transactions now exist on a server that is not yours</strong>.
+      You can read the policy and trust it, but it no longer depends on you — it depends on that
+      company's security, on who buys it, and on what the policy says next year.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>2 · Read the alerts you already get</h2>
+    <p>
+      Your bank already sends a notification to your phone when you pay by card or a direct debit
+      goes through. That alert carries the amount and the merchant inside it, written as text. An app
+      with <strong>notification access</strong> can read it and turn it into a transaction, without
+      asking your bank anything and without talking to any server.
+    </p>
+    <p>
+      This is what <a href="en.html">Xtracto</a> does. The permission is granted by hand in the
+      system settings, revoked the same way, and reaches only the apps you tick one by one: it is not
+      a key to read your whole phone.
+    </p>
+    <div class="aviso">
+      <p><strong>Reading notifications is not connecting to your bank.</strong> There are no
+      credentials, there is no Open Banking, and it cannot look up your real balance. It is a text
+      reader over alerts that were already on your screen.</p>
+    </div>
+    <p style="margin-top:18px">
+      And here is what really sets this approach apart: because it needs no server,
+      <strong>the app can decline to declare the internet permission</strong>. When it is not
+      declared, Android refuses any attempt it makes to open a connection. It stops being a promise
+      made to you and becomes something you can check against the installed file.
+    </p>
+    <p>
+      <a class="boton secundario" href="check-permissions.html">How to check it yourself</a>
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>What this approach cannot do</h2>
+    <p>
+      If the rest of this article is going to be any use to you, this part has to be true as well.
+      Reading alerts has three limits, and none of them is fixed by better programming:
+    </p>
+    <ul class="limpia nunca">
+      <li><span class="marca-item">✕</span><span><strong>There is no history.</strong> It starts
+      recording the day you install it. Whatever came before does not exist for it.</span></li>
+      <li><span class="marca-item">✕</span><span><strong>There is no real balance.</strong> It knows
+      what you have spent since it was set up, not what is in your account.</span></li>
+      <li><span class="marca-item">✕</span><span><strong>If your bank does not notify you, there is
+      nothing to read.</strong> And every bank writes its alerts its own way, so each format has to
+      be taught to it.</span></li>
+    </ul>
+    <p style="margin-top:18px">
+      That last one is the one you can push on: <a href="banks.html">the list of banks</a> grows with
+      the formats people send in, and if yours is not there,
+      <a href="request-a-bank.html">you can ask for it</a>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>3 · Enter it by hand</h2>
+    <p>
+      The dullest way, and the only one that hands absolutely nothing to anyone. It works with any
+      bank in the world, needs no permissions, and never misreads anything.
+    </p>
+    <p>
+      The downside is well known: people give up. Most last about two weeks. That is why in Xtracto
+      it is a complement rather than the main way: <strong>you can enter an expense by hand and, if
+      the bank alert for that same payment arrives later, it replaces your entry instead of
+      duplicating it</strong>. So a bank that is not supported yet does not leave your month half
+      recorded.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Which one suits you</h2>
+    <p>
+      There is no answer that is right for everyone, and anyone telling you otherwise is selling
+      something:
+    </p>
+    <div class="rejilla dos">
+      <div class="tarjeta">
+        <h3>Link the bank</h3>
+        <p style="margin:0">If you need complete accounts —the real balance, the history, several
+        accounts reconciled against each other— and you accept that your transactions will live on
+        someone else's server.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Read the alerts</h3>
+        <p style="margin:0">If what you want is to know where your month goes without handing your
+        financial life to anyone, and starting the count from today is enough.</p>
+      </div>
+    </div>
+    <p style="margin-top:18px">
+      Put another way: the first gives you <strong>more data</strong> and the second leaves you
+      <strong>less exposed</strong>. Choosing means deciding which of the two you need more.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Xtracto is the second one</h2>
+    <p>
+      It reads the alerts your bank already sends, records them, and declares no internet access
+      permission: even if it wanted to send your data to a server, the operating system would stop
+      it. No cloud, no account to create, no sign-up.
+    </p>
+    <p style="margin-top:22px">
+      <a class="boton" href="closed-test.html">Join the closed test</a>
+      <a class="boton secundario" href="banks.html">See if your bank is there</a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="envoltorio">
+    <p>Xtracto · Built to work offline · <a href="privacidad.html">Privacy</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
