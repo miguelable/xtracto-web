@@ -11,10 +11,16 @@
   </url>
   <url>
     <loc>https://xtracto.app/bancos.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/bancos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/banks.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/bancos.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/banks.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/bancos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/banks.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/bancos.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
@@ -26,6 +32,9 @@
   </url>
   <url>
     <loc>https://xtracto.app/closed-test.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/prueba-cerrada.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/closed-test.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/prueba-cerrada.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
@@ -37,6 +46,9 @@
   </url>
   <url>
     <loc>https://xtracto.app/novedades.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/novedades.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/roadmap.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/novedades.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
@@ -45,14 +57,23 @@
   </url>
   <url>
     <loc>https://xtracto.app/prueba-cerrada.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/prueba-cerrada.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/closed-test.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/prueba-cerrada.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/roadmap.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/novedades.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/roadmap.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/novedades.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://xtracto.app/sin-conectar-el-banco.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/sin-conectar-el-banco.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/without-linking-your-bank.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/sin-conectar-el-banco.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
   <url>
@@ -64,6 +85,9 @@
   </url>
   <url>
     <loc>https://xtracto.app/without-linking-your-bank.html</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://xtracto.app/sin-conectar-el-banco.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xtracto.app/without-linking-your-bank.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xtracto.app/sin-conectar-el-banco.html"/>
     <lastmod>2026-09-09</lastmod>
   </url>
 </urlset>

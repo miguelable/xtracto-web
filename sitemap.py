@@ -5,7 +5,7 @@ Genera `sitemap.xml` mirando las páginas que hay y preguntándole a git cuándo
 Existe para no tener que acordarse de nada. Antes el `<lastmod>` estaba escrito a mano, y una fecha
 escrita a mano en un sitemap solo tiene dos estados: recién puesta, o mintiendo.
 
-Dos reglas, y las dos se deducen solas del propio sitio:
+Tres reglas, y las tres se deducen solas del propio sitio:
 
   · Entra toda página .html de la raíz **salvo** las que llevan `<meta name="robots" content=
     "noindex">`. Así, marcar una página como no indexable la saca del sitemap sin tocar este
@@ -13,6 +13,14 @@ Dos reglas, y las dos se deducen solas del propio sitio:
   · El `<lastmod>` sale de la fecha del último commit que tocó el fichero. Si el fichero tiene
     cambios sin commitear —que es lo normal, porque esto se ejecuta justo antes de commitear— se
     usa la fecha de hoy.
+  · Las traducciones (`<xhtml:link hreflang=...>`) salen de **las que declara cada página en su
+    propio `<head>`**, tal cual. Antes eran una lista escrita aquí a mano, y se quedó atrás: tenía
+    dos parejas de las seis que hay, así que `bancos`/`banks`, `sin-conectar-el-banco`/
+    `without-linking-your-bank`, `prueba-cerrada`/`closed-test` y `novedades`/`roadmap` salían en el
+    sitemap como si fueran páginas sueltas sin versión en el otro idioma. Nada chillaba, porque las
+    páginas sí declaraban su terna: solo el sitemap decía otra cosa. Leyéndola de la página no se
+    puede volver a separar, y una pareja nueva entra sola. Que la terna esté completa —`es`, `en` y
+    `x-default`, las tres o ninguna— ya lo comprueba `verificar.py`.
 
     python3 sitemap.py
 """
@@ -25,14 +33,8 @@ from pathlib import Path
 BASE = 'https://xtracto.app/'
 RAIZ = Path(__file__).resolve().parent
 
-# Qué páginas son la misma en otro idioma. La primera de cada grupo es la que se ofrece como
-# x-default, es decir, la que ve quien llega sin un idioma preferido claro.
-GRUPOS = [
-    {'es': 'index.html', 'en': 'en.html'},
-    {'es': 'verificar-permisos.html', 'en': 'check-permissions.html'},
-]
-
 NOINDEX = re.compile(r'<meta\s+name="robots"\s+content="[^"]*noindex', re.I)
+ALTERNATIVA = re.compile(r'<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">')
 
 
 def url(fichero):
@@ -64,13 +66,15 @@ def paginas():
 
 
 def alternativas(fichero):
-    for grupo in GRUPOS:
-        if fichero in grupo.values():
-            xd = next(iter(grupo.values()))
-            return ([f'<xhtml:link rel="alternate" hreflang="{i}" href="{url(f)}"/>'
-                     for i, f in grupo.items()]
-                    + [f'<xhtml:link rel="alternate" hreflang="x-default" href="{url(xd)}"/>'])
-    return []
+    """Las traducciones que la propia página declara en su `<head>`, en su mismo orden.
+
+    Se copian tal cual, incluida la que apunta a la página misma: el sitemap las quiere todas en
+    cada entrada, no solo las de los otros idiomas. Una página sin `hreflang` —`privacidad.html`,
+    que es bilingüe en un solo fichero y se reparte con `#es` / `#en`— no declara ninguna y aquí no
+    sale ninguna, que es lo correcto.
+    """
+    return [f'<xhtml:link rel="alternate" hreflang="{idioma}" href="{destino}"/>'
+            for idioma, destino in ALTERNATIVA.findall((RAIZ / fichero).read_text(encoding='utf-8'))]
 
 
 def main():
