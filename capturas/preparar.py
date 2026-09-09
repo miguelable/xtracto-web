@@ -14,9 +14,12 @@ Tres cosas que conviene saber antes de tocar esto:
   · **Los datos son inventados.** Salen de `tools/generar_demo.py` y se siembran en un emulador. No
     se hacen sobre el teléfono del autor porque ahí hay dinero real: comercios de verdad y los cuatro
     dígitos de tarjetas de verdad, que acabarían en una página pública.
-  · **Solo las de teléfono.** Las de tablet existen, pero hoy el contenido va limitado a 640dp
-    centrados y en una pantalla de 1280dp media captura sale vacía. Entran cuando el hito 10 llene
-    ese hueco.
+  · **Solo las de teléfono, y esto ya es una decisión y no una limitación.** Se quedaban fuera
+    porque el contenido iba capado a 640dp centrados y en una pantalla de 1280dp media captura
+    salía vacía; **desde el 09-09-2026 eso ya no pasa** —el resumen se reparte en tres columnas y
+    Movimientos y Capturas van en lista y detalle—, así que las de tablet están hechas y se ven
+    bien. No entran en la portada porque eso es rehacer la rejilla de la sección, que hoy son
+    cuatro móviles en fila; si alguien las quiere aquí, ese es el trabajo.
   · **WebP y no PNG.** La misma captura a 480 px de ancho ocupa 25 KB en WebP y 107 en PNG. Con
     cuatro por portada la diferencia es de 100 KB contra 430, y este sitio presume de ser ligero.
 """
