@@ -129,6 +129,41 @@ td.entidad { white-space: nowrap; }
 
 .apunte { display: inline-block; margin-top: 6px; color: var(--text-3); font-size: 13.5px; line-height: 1.5; }
 
+/*
+ * Los dos vídeos de la app: el de tablet en pantalla ancha y el de teléfono en estrecha.
+ *
+ * Son dos elementos y no uno con dos `<source media>` —que también funciona— porque con
+ * `preload="none"` ninguno de los dos descarga vídeo hasta que se pulsa play: medido, cero bytes en
+ * los dos anchos. Lo único que se paga son los dos carteles. Y así no dependemos de que el
+ * navegador respete `media` dentro de `<video>`, que es un rincón poco pisado del estándar.
+ *
+ * **Lo que NO se puede hacer es `autoplay`.** Con autoplay el navegador se baja los dos vídeos
+ * —medido: 20,9 MB, en cualquier ancho—, porque `display:none` no evita la descarga y `autoplay`
+ * anula el `preload="none"`.
+ *
+ * `height:auto` no es decorativo: sin él la caja se queda con la altura del atributo mientras el
+ * ancho va al 100 %, y el cartel sale con bandas negras arriba y abajo.
+ *
+ * El corte es el mismo 900px de la barra de navegación, a propósito: dos puntos de ruptura
+ * distintos en el mismo sitio se acaban desincronizando.
+ */
+.video-app {
+  width: 100%; height: auto; display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+/* El vertical va acotado y centrado, no a todo el ancho de la columna: es 9:20, así que a los ~550px
+   que mide el cuerpo en un móvil saldría de 1.226px de alto —más de una pantalla entera— y habría
+   que hacer scroll para ver el botón de play y el final del vídeo a la vez. A 340px se queda en
+   unos 755 y además se ve al tamaño que tiene un teléfono de verdad, que es la gracia. */
+.video-estrecho { max-width: 340px; margin-left: auto; margin-right: auto; }
+.video-ancho { display: none; }
+@media (min-width: 900px) {
+  .video-ancho { display: block; }
+  .video-estrecho { display: none; }
+}
+
 .faq h3 { font-size: 18px; margin: 30px 0 8px; }
 .faq > h3:first-child { margin-top: 0; }
 .faq p:last-child { margin-bottom: 0; }

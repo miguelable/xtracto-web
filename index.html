@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
 <title>App de gastos que lee los avisos de tu banco — Xtracto</title>
 <meta name="description" content="App de Android que lee los avisos de tu banco y apunta tus gastos sola. Sin nube, sin cuentas y sin permiso de acceso a internet.">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -295,6 +295,22 @@ aapt2 dump permissions xtracto.apk</pre>
           completo con buscador. Nada que teclear.</p>
         </div>
       </div>
+    </div>
+
+    <div style="margin-top:36px">
+      <video class="video-app video-estrecho" controls preload="none" playsinline
+             width="540" height="1200" poster="videos/cartel-movil-es.webp"
+             aria-label="Recorrido por Xtracto en un teléfono: el resumen del mes, el historial de movimientos, el archivo de avisos y los ajustes.">
+        <source src="videos/movil-es.mp4" type="video/mp4">
+      </video>
+      <video class="video-app video-ancho" controls preload="none" playsinline
+             width="1280" height="800" poster="videos/cartel-tablet-es.webp"
+             aria-label="Recorrido por Xtracto en una tablet: el resumen en tres columnas con el presupuesto, el reparto por categorías y el top de comercios.">
+        <source src="videos/tablet-es.mp4" type="video/mp4">
+      </video>
+      <p class="apunte">Un recorrido por la app, sin sonido: en pantalla ancha va la versión de tablet
+      y en móvil la de teléfono. <strong>No se descarga nada hasta que pulsas play</strong>. Las
+      pantallas que enseña son las mismas de aquí abajo, descritas una a una.</p>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:14px;margin-top:36px">

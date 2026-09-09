@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
 <title>Expense app that reads your bank alerts — Xtracto</title>
 <meta name="description" content="Android app that reads your bank alerts and records your spending on its own. No cloud, no accounts, no internet permission.">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -296,6 +296,22 @@ aapt2 dump permissions xtracto.apk</pre>
           search. Nothing to type.</p>
         </div>
       </div>
+    </div>
+
+    <div style="margin-top:36px">
+      <video class="video-app video-estrecho" controls preload="none" playsinline
+             width="540" height="1200" poster="videos/cartel-movil-en.webp"
+             aria-label="A walk through Xtracto on a phone: the month summary, the transaction history, the alert archive and the settings.">
+        <source src="videos/movil-en.mp4" type="video/mp4">
+      </video>
+      <video class="video-app video-ancho" controls preload="none" playsinline
+             width="1280" height="800" poster="videos/cartel-tablet-en.webp"
+             aria-label="A walk through Xtracto on a tablet: the summary in three columns with the budget, the category split and the merchant top.">
+        <source src="videos/tablet-en.mp4" type="video/mp4">
+      </video>
+      <p class="apunte">A walk through the app, no sound: wide screens get the tablet version and
+      phones the handset one. <strong>Nothing downloads until you press play</strong>. The screens it
+      shows are the same ones below, each described in full.</p>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:14px;margin-top:36px">

@@ -43,9 +43,13 @@ def texto(nombre):
 
 
 def referencias_resuelven():
+    # `poster` entra por el mismo motivo que `href` y `src`, y no es una comprobación nueva sino la
+    # misma con la red más ancha: un cartel de vídeo roto no da error, deja una caja negra con un
+    # botón de play, y eso se puede quedar meses sin que nadie lo note. Es exactamente el fallo que
+    # esta comprobación existe para cazar.
     for f in paginas() + ['estilo.css', 'formato.css']:
         t = texto(f)
-        patron = r'(?:href|src)="([^"]+)"' if f.endswith('.html') else r"url\('([^']+)'\)"
+        patron = r'(?:href|src|poster)="([^"]+)"' if f.endswith('.html') else r"url\('([^']+)'\)"
         for r in re.findall(patron, t):
             if r.startswith(('http', '#', 'mailto', 'data:')):
                 continue
