@@ -29,9 +29,17 @@ Cuatro decisiones que conviene no deshacer sin pensarlo:
     descargarse el fichero entero antes de pintar el primer fotograma, que con `preload="none"` es
     justo lo que se nota: el usuario pulsa play y no pasa nada durante segundos.
 
-**El recorte está sin usar a propósito.** Los originales duran de 95 a 110 s, que es largo, pero
-cortarlos requiere saber qué se enseña en cada tramo y eso no se puede decidir desde aquí. Si
-quieres acortarlos, pon los segundos en `RECORTE` del vídeo que sea y vuelve a ejecutar.
+**Salen más cortos que el original sin perder ni una pantalla**, y por dos vías distintas:
+
+  · **Se les quita el arranque congelado**, que se detecta solo. Los cuatro originales empezaban con
+    entre 11 y 15 segundos de imagen fija —el emulador esperando antes de que empezara el paseo—.
+    En un vídeo que se reproduce al pulsar play eso es lo peor que puede haber: pulsas y no pasa
+    nada durante quince segundos, y te vas. Ahí no hay contenido que perder.
+  · **Se aceleran.** Medido sobre los originales, entre el **58 % y el 73 % del metraje está
+    prácticamente quieto**, así que acelerar recorta sobre todo tiempo muerto y no sobre lo que hay
+    que leer. Es la constante `VELOCIDAD`.
+
+Entre las dos cosas, de 94-108 s se pasa a unos 45-55, con todo lo que se enseñaba dentro.
 """
 import shutil
 import subprocess
@@ -53,6 +61,18 @@ FPS = 30            # tope, no forzado hacia arriba: si el original va a 30 se q
 # debajo de 72 se deja de ganar: el 64 solo quita otros 4 KB.
 CALIDAD_CARTEL = 72
 
+# Cuánto se acelera. 1.8 sale de que el 58-73 % del metraje está quieto: lo que se comprime es sobre
+# todo el rato en que una pantalla se queda parada para que se lea, no el movimiento. Una pausa de
+# tres segundos se queda en 1,7, que sigue dando tiempo a registrar la pantalla, y un desplazamiento
+# de un segundo en medio, que se sigue con la vista. Si se sube de 2 empieza a costar leer los
+# importes, que es justo lo que hay que poder leer.
+VELOCIDAD = 1.8
+
+# Margen de imagen fija que se deja antes de que empiece el movimiento, en segundos. No es un
+# capricho: el cartel se saca de ese trozo, así que el primer fotograma del vídeo y el cartel son el
+# mismo y no se ve un salto al pulsar play.
+MARGEN = 0.5
+
 # (fichero de origen, nombre en la web, ancho, alto, segundo del que sale el cartel)
 #
 # Los tamaños son fracciones exactas del original —la mitad del vertical, dos tercios del
@@ -61,14 +81,15 @@ CALIDAD_CARTEL = 72
 # El segundo del cartel es el fotograma que se ve antes de pulsar play, así que tiene que ser una
 # pantalla que se entienda sola: el resumen, no una transición a medias.
 VIDEOS = [
-    ('xtracto-movil-es.mp4',  'movil-es',   540, 1200, 2),
-    ('xtracto-movil-en.mp4',  'movil-en',   540, 1200, 2),
-    ('xtracto-tablet-es.mp4', 'tablet-es', 1280,  800, 2),
-    ('xtracto-tablet-en.mp4', 'tablet-en', 1280,  800, 2),
+    ('xtracto-movil-es.mp4',  'movil-es',   540, 1200, 0.2),
+    ('xtracto-movil-en.mp4',  'movil-en',   540, 1200, 0.2),
+    ('xtracto-tablet-es.mp4', 'tablet-es', 1280,  800, 0.2),
+    ('xtracto-tablet-en.mp4', 'tablet-en', 1280,  800, 0.2),
 ]
 
-# Segundos (desde, hasta) para acortar un vídeo. Ver la nota de la cabecera: vacío = entero.
-RECORTE: dict[str, tuple[float, float]] = {}
+# Para forzar el arranque de un vídeo a mano, en segundos, si la detección automática se equivocara.
+# Vacío = se detecta solo, que es lo normal.
+ARRANQUE: dict[str, float] = {}
 
 
 # Donde winget deja el ffmpeg de Gyan. Se mira **después** del PATH, y está aquí escrito porque el
@@ -113,6 +134,37 @@ def correr(orden):
         sys.exit('ffmpeg falló:\n' + '\n'.join(r.stderr.strip().splitlines()[-6:]))
 
 
+def arranque_congelado(ffmpeg, entrada, es_windows):
+    """Cuánta imagen fija hay al principio del vídeo, en segundos.
+
+    Los cuatro originales empezaban con entre 11 y 15 segundos de pantalla quieta, que en un vídeo
+    con `preload="none"` es lo peor posible: se pulsa play y no pasa nada. Ahí no hay contenido.
+
+    Se detecta con `freezedetect` en vez de cablear el número, para que siga valiendo si se
+    regraban. **Hay que encadenar los tramos contiguos**: en el vídeo de tablet el filtro parte el
+    arranque en 0→8,33 y 8,33→14,33 —lo corta un cambio de un píxel— y quedarse con el primero
+    dejaría seis segundos muertos dentro.
+    """
+    r = subprocess.run([ffmpeg, '-loglevel', 'info', '-i', ruta_para(entrada, es_windows),
+                        '-map', '0:v:0', '-vf', 'freezedetect=n=-55dB:d=2', '-f', 'null', '-'],
+                       capture_output=True, text=True)
+    tramos, inicio = [], None
+    for linea in r.stderr.splitlines():
+        if 'freeze_start' in linea:
+            inicio = float(linea.rsplit(':', 1)[1])
+        elif 'freeze_end' in linea and inicio is not None:
+            tramos.append((inicio, float(linea.rsplit(':', 1)[1])))
+            inicio = None
+    if not tramos or tramos[0][0] > 0.5:      # no empieza congelado: no se toca
+        return 0.0
+    fin = tramos[0][1]
+    for a, b in tramos[1:]:
+        if a > fin + 0.1:                      # se rompió la cadena
+            break
+        fin = b
+    return max(0.0, fin - MARGEN)
+
+
 def main():
     ffmpeg, es_windows = buscar_ffmpeg()
     if not ffmpeg:
@@ -137,15 +189,17 @@ def main():
         salida = AQUI / f'{nombre}.mp4'
         cartel = AQUI / f'cartel-{nombre}.webp'
 
-        recorte = []
-        if nombre in RECORTE:
-            desde, hasta = RECORTE[nombre]
-            recorte = ['-ss', str(desde), '-to', str(hasta)]
+        desde = ARRANQUE.get(nombre)
+        if desde is None:
+            desde = arranque_congelado(ffmpeg, entrada, es_windows)
 
-        correr([ffmpeg, '-y', '-loglevel', 'error', *recorte,
+        correr([ffmpeg, '-y', '-loglevel', 'error',
+                *(['-ss', f'{desde:.3f}'] if desde else []),
                 '-i', ruta_para(entrada, es_windows),
                 '-map', '0:v:0',                     # solo vídeo: ni audio ni metadatos
-                '-vf', f'scale={ancho}:{alto}:flags=lanczos',
+                # El orden importa: primero se escala y después se re-cronometra. `-r` va como
+                # opción de salida, así que remuestrea lo que sale de `setpts`, no lo que entra.
+                '-vf', f'scale={ancho}:{alto}:flags=lanczos,setpts=PTS/{VELOCIDAD}',
                 '-r', str(FPS),
                 '-c:v', 'libx264', '-preset', 'slow', '-crf', str(CRF),
                 '-profile:v', 'high', '-pix_fmt', 'yuv420p',
@@ -162,7 +216,8 @@ def main():
         antes = entrada.stat().st_size / 1048576
         print(f'  {salida.name:15} {ancho}×{alto}  '
               f'{antes:5.1f} MB → {salida.stat().st_size / 1048576:4.1f} MB   '
-              f'cartel {cartel.stat().st_size / 1024:.0f} KB')
+              f'cartel {cartel.stat().st_size / 1024:2.0f} KB   '
+              f'quita {desde:4.1f} s de arranque congelado y va a {VELOCIDAD}×')
 
     total = sum((AQUI / f'{v[1]}.mp4').stat().st_size for v in VIDEOS) / 1048576
     print(f'\n{total:.1f} MB en total.\n\n'
