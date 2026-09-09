@@ -119,7 +119,7 @@ TEXTOS = {
                '\u2014importe, a quién y la fecha\u2014, y si más adelante llega la notificación del '
                'banco de ese mismo pago, sustituye a tu apunte en vez de duplicarlo.',
         boton='Enviar el formato de mi banco', destino='formato.html',
-        pie='Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a>',
+        pie='Xtracto · Hecha para funcionar sin conexión · <a href="privacidad.html">Privacidad</a> · <a href="novedades.html">Novedades</a>',
         nota='Reconocer un aviso no es conectarse al banco. Xtracto no pide credenciales, no usa Open '
              'Banking y no puede consultar tu saldo real: solo lee las notificaciones que ya recibes.'),
     'en': dict(
@@ -142,7 +142,7 @@ TEXTOS = {
                '\u2014the amount, who it went to and the date\u2014, and if the bank alert for that '
                'same payment arrives later, it replaces your entry instead of duplicating it.',
         boton="Send my bank's format", destino='format.html',
-        pie='Xtracto · Built to work offline · <a href="privacidad.html#en">Privacy</a>',
+        pie='Xtracto · Built to work offline · <a href="privacidad.html#en">Privacy</a> · <a href="roadmap.html">Roadmap</a>',
         nota='Recognising an alert is not connecting to a bank. Xtracto asks for no credentials, does '
              'not use Open Banking and cannot read your real balance: it only reads notifications you '
              'already receive.'),

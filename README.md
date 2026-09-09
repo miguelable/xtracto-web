@@ -6,7 +6,7 @@
 
 **Tus gastos se apuntan solos. Y no salen del móvil.**
 
-[xtracto.app](https://xtracto.app) · [English](https://xtracto.app/en.html) · [Política de privacidad](https://xtracto.app/privacidad.html)
+[xtracto.app](https://xtracto.app) · [English](https://xtracto.app/en.html) · [Novedades y hoja de ruta](https://xtracto.app/novedades.html) · [Política de privacidad](https://xtracto.app/privacidad.html)
 
 `En prueba cerrada` — [pide entrar en la prueba](https://xtracto.app/prueba-cerrada.html)
 

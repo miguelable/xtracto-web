@@ -1,0 +1,189 @@
+<!doctype html>
+<!-- Generado por novedades.py. No editar a mano: se regenera y te lo pisa. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xtracto roadmap and release notes</title>
+<meta name="description" content="Where Xtracto stands: what the app already does, what is being worked on now, what comes next, and what we are never going to do.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="canonical" href="https://xtracto.app/roadmap.html">
+<link rel="alternate" hreflang="es" href="https://xtracto.app/novedades.html">
+<link rel="alternate" hreflang="en" href="https://xtracto.app/roadmap.html">
+<link rel="alternate" hreflang="x-default" href="https://xtracto.app/novedades.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Xtracto">
+<meta property="og:url" content="https://xtracto.app/roadmap.html">
+<meta property="og:title" content="Xtracto roadmap and release notes">
+<meta property="og:description" content="Where Xtracto stands: what the app already does, what is being worked on now, what comes next, and what we are never going to do.">
+<meta property="og:image" content="https://xtracto.app/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fuentes/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<nav class="navegacion" aria-label="Site sections">
+  <div class="envoltorio">
+    <a class="marca-nav" href="en.html"><img src="marca/logo.svg" width="26" height="26" alt=""><span>Xtracto</span></a>
+    <input class="interruptor" id="menu" type="checkbox" aria-label="Menu">
+    <label class="hamburguesa" for="menu" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></label>
+    <div class="panel">
+      <ul>
+        <li><a href="without-linking-your-bank.html">Without linking</a></li>
+        <li><a href="banks.html">Banks</a></li>
+        <li><a href="check-permissions.html">Check it</a></li>
+        <li><a href="privacidad.html#en">Privacy</a></li>
+      </ul>
+      <div class="idiomas-nav"><a href="novedades.html" hreflang="es" lang="es" title="Español">ES</a><span aria-hidden="true">·</span><a href="roadmap.html" hreflang="en" lang="en" title="English" class="activo">EN</a></div>
+    </div>
+    <a class="boton compacto" href="closed-test.html">Try the app</a>
+  </div>
+</nav>
+
+<header class="principal" style="padding:40px 0 48px;text-align:left">
+  <div class="envoltorio">
+    <p class="chip" style="margin-left:0"><span class="punto"></span>In closed testing · version 1.0</p>
+    <h1 style="font-size:clamp(28px,5vw,40px);margin-top:18px">Roadmap and release notes</h1>
+    <p class="entradilla" style="margin:0">Where Xtracto stands today, what each version carried and where it is heading. No dates, and the reason is further down.</p>
+    <nav class="indice" aria-label="On this page">
+      <ul>
+        <li><a href="#done">Done</a></li>
+        <li><a href="#in-progress">In progress now</a></li>
+        <li><a href="#next">Next</a></li>
+        <li><a href="#later">Later on</a></li>
+        <li><a href="#not-doing">What we are not going to do</a></li>
+        <li><a href="#releases">Release history</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section>
+  <div class="envoltorio">
+    <h2>Where it stands today</h2>
+    <p>Xtracto is <strong>already on Google Play, but in closed testing</strong>: today only accounts enrolled as testers can install it. What is missing before it opens to everybody is not code, it is a Google condition: <strong>twelve people inside the test for fourteen days in a row</strong>, and using it.</p>
+    <p>So this project’s critical path, today, does not go through the code. <a href="closed-test.html">Joining the test</a> is what speeds it up most.</p>
+  </div>
+</section>
+
+<section id="done">
+  <div class="envoltorio">
+    <h2>Done</h2>
+    <p><strong>“Done” means written, tested and verified on a real phone.</strong> It does not mean it is already in the version you have installed. The one in the closed test today is <strong>1.0</strong>, and out of all this it carries four things: reading the alerts, entering by hand, choosing which apps it listens to, and the total with its breakdown —which there is the month’s only, without the other periods—. <strong>The rest of this box is waiting for the next version</strong>, and the release history at the end of the page says what each one carried.</p>
+    <ul class="limpia" style="margin-top:22px;gap:20px">
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Reading your bank’s alerts</strong><span style="display:block;margin-top:5px">When your bank tells you about a card payment or a direct debit, Xtracto reads that alert and turns it into a transaction, with its amount, its merchant and its card. Without typing anything and without talking to any server.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Entering an expense by hand</strong><span style="display:block;margin-top:5px">For what the bank never announces: cash, a store card, a payment someone else made. And if the alert for that same payment arrives later, <strong>it replaces your entry instead of counting it twice</strong>.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Deciding which apps it listens to</strong><span style="display:block;margin-top:5px">The catalogue is a <a href="en.html#the-permission">closed list of finance applications</a>, and within it you choose one by one. Turning one off is not hiding it: the service does not even open its notifications.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>The period total, and something to compare it with</strong><span style="display:block;margin-top:5px">Day, week, month, year or the whole history. The comparison with the previous period is <strong>trimmed to the same point</strong>: setting half a month against a whole one tells you nothing.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Naming your cards and accounts</strong><span style="display:block;margin-top:5px">“••0634” means nothing to anybody and “Trade Republic” does. The name is presentation only: <strong>the four digits stay visible</strong>, because they are what lets you reconcile the breakdown against your bank statement.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Spending categories</strong><span style="display:block;margin-top:5px">A closed list of fourteen, and what gets classified is <strong>the merchant, not the transaction</strong>: you classify the supermarket once and every purchase there is classified, the past ones and the ones still to come.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>A summary you can read at a glance</strong><span style="display:block;margin-top:5px">The total says <em>how much</em>, the heatmap <em>when</em>, the category ring <em>on what</em> and the merchant top <em>where</em>. It is drawn by hand, <strong>with no charting library</strong>: every dependency is weight, surface to audit and one more thing that might want to touch the network.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>A monthly budget</strong><span style="display:block;margin-top:5px">With a pace marker, because having spent 60 % on the 5th and having spent it on the 25th are not the same news, and a plain bar paints them identically.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Choosing which charts you see</strong><span style="display:block;margin-top:5px">Every new chart makes the summary longer. The ones you do not care about are turned off <strong>from the summary itself</strong>, which is where you can see what is in the way, and not from a settings screen.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Money in and transfers, told apart</strong><span style="display:block;margin-top:5px">Money in shows green with a “+”; a transfer shows muted and unsigned, because moving money from one of your pockets to another is neither spending nor income. <strong>Totals still count outgoings only</strong>, so that the day the first credit lands the month does not inflate.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--success)">✓</span><span><strong>Tablet</strong><span style="display:block;margin-top:5px">The summary in three columns, and the lists with the detail beside them instead of one narrow column in the middle of an empty screen.</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="in-progress">
+  <div class="envoltorio">
+    <h2>In progress now</h2>
+    <p>What is being worked on these days, ordered by what it costs most to leave unfinished.</p>
+    <ul class="limpia" style="margin-top:22px;gap:20px">
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--warn)">●</span><span><strong>Charges that do not say who they are from</strong><span style="display:block;margin-top:5px">Some alerts only say that an amount was charged to the account, with no merchant. <strong>The same sentence, word for word, covers an instant transfer you sent and the monthly settlement of a credit card</strong>, and nothing in the text tells them apart. Adding the rule blindly would count that card’s purchases twice: each purchase first, and then the receipt that charges them all together. The way out is for you to declare in Settings which card is a credit card and which account it settles against, then reconcile by exact amount. <strong>It is the only thing on this page that is counted wrong today</strong>, which is why it comes first.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--warn)">●</span><span><strong>Getting money in to read itself</strong><span style="display:block;margin-top:5px">The rules for incoming money are already written —transfer received, interest, salary— and what is missing is checking them against real alerts. <strong>Written is not verified</strong>, and a salary shows up once a month: this moves at the pace of the calendar, not of the keyboard.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--warn)">●</span><span><strong>More banks</strong><span style="display:block;margin-top:5px">The <a href="banks.html">list of recognised banks</a> grows with the formats people send in. When an alert is not understood, it can be sent <strong>without sending any of your data</strong>: the app replaces amounts, dates, merchants and numbers with placeholders and shows you the exact text before it goes.</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="next">
+  <div class="envoltorio">
+    <h2>Next</h2>
+    <p>Decided and not started. Nearly all of it waits on the same thing: the app seeing the money that comes in as well.</p>
+    <ul class="limpia" style="margin-top:22px;gap:20px">
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>Money in against money out, in bars</strong><span style="display:block;margin-top:5px">What came in and what went out in each period, at a glance. Waiting on incoming money reading itself.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>Net balance and savings rate</strong><span style="display:block;margin-top:5px">Computing them is trivial, which is exactly why <strong>they are not there</strong>. Until the app sees every credit, the net figure for a month in which a salary landed would come out red, as if somebody were burning through savings. <strong>An exact, false number is worse than no number.</strong></span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>Trend</strong><span style="display:block;margin-top:5px">How spending is going against previous periods. Same wait.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>Picking a custom date range</strong><span style="display:block;margin-top:5px">Under the hood it has worked from the start; what is missing is the screen to pick the two dates. It does not appear as an option until then: an option that cannot do anything is worse than no option.</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="later">
+  <div class="envoltorio">
+    <h2>Later on</h2>
+    <p>Where the app is heading once the above is closed.</p>
+    <ul class="limpia" style="margin-top:22px;gap:20px">
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>Spotting what repeats</strong><span style="display:block;margin-top:5px">Subscriptions and recurring bills deduced from your own history, without typing them in: same merchant, similar amount, monthly or yearly cadence. <strong>It cannot be done yet, and not for lack of wanting to:</strong> deducing a cadence needs roughly three months of history, and a freshly installed app does not have them. Writing it today would mean calibrating it against invented cases.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>Alerts, without leaving the phone</strong><span style="display:block;margin-top:5px">“You are at 90 % of your budget”, a subscription that went up in price. The usual way to do this is push notifications from a server; here there is <strong>no server and no network permission</strong>, so Android itself fires them locally. It changes the character of the app —from watching to interrupting— so it will be decided slowly.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--text-3)">○</span><span><strong>A findings panel</strong><span style="display:block;margin-top:5px">The biggest expense of the month, the most frequent merchant, the change against last month. It is <strong>the honest substitute for an AI assistant</strong>: “how much did I spend on going out?” is not intelligence, it is a query.</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="not-doing">
+  <div class="envoltorio">
+    <h2>What we are not going to do</h2>
+    <p>A plan that only says what is coming cannot be judged. This is what has been ruled out <strong>on purpose</strong>, and why: nearly all of it is what expense apps do, and each one would cost exactly what makes this one different.</p>
+    <ul class="limpia" style="margin-top:22px;gap:20px">
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--danger)">✕</span><span><strong>Linking to your bank</strong><span style="display:block;margin-top:5px">No credentials and no Open Banking. It is the line that defines the app: without it Xtracto would be one of the hundred that already exist, and with it the app cannot read your real balance or move a euro. The three ways of recording expenses, and what each one sees, are <a href="without-linking-your-bank.html">compared here</a>.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--danger)">✕</span><span><strong>A cloud AI assistant</strong><span style="display:block;margin-top:5px">Sending your spending to somebody’s API so it can summarise it contradicts everything else. A model running <strong>inside the phone itself</strong> is an open door, but only the day it can be shown that not even downloading the model breaks the “nothing leaves the phone”.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--danger)">✕</span><span><strong>Reading receipts with the camera</strong><span style="display:block;margin-top:5px">It would cover cash, and technically it can be done offline. But it costs <strong>the camera permission</strong>, and this app’s whole argument is that it asks for the minimum and not even network access.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--danger)">✕</span><span><strong>Balances, debts, goals and net worth</strong><span style="display:block;margin-top:5px">It contradicts the premise: <strong>Xtracto watches, it does not put you to work doing bookkeeping</strong>. Entering by hand exists to cover the gaps the bank never announces, not so that you type out your life.</span></span></li>
+        <li><span class="marca-item" aria-hidden="true" style="color:var(--danger)">✕</span><span><strong>Splitting expenses with friends</strong><span style="display:block;margin-top:5px">That is another product, and there are already a few good ones.</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>Why there are no dates here</h2>
+    <p>Because any I could write would be a lie. What blocks release today is twelve people and fourteen days, not a feature. And two of the things above <strong>are waiting on the real world</strong> —a salary payment arriving, a card’s monthly settlement arriving— which happens when it happens and cannot be forced.</p>
+    <p>What can be said is <strong>the order and the reasons</strong>. That is everything above, and it is updated whenever something moves from one box to another.</p>
+  </div>
+</section>
+
+<section id="releases">
+  <div class="envoltorio">
+    <h2>Release history</h2>
+    <p>Versions are numbered <strong>when they reach Google Play</strong>, not when they are finished. That is why there are things under “Done” that do not appear down here yet.</p>
+    <div class="tarjeta" style="margin-top:16px">
+      <h3>1.0 <span class="apunte" style="margin:0 0 0 6px">September 2026</span></h3>
+      <p style="margin:0">First version, on Google Play and in closed testing. It carries just enough for the app to stand on its own: it reads card payments and direct debits from the recognised banks and turns them into transactions; it lets you <strong>enter by hand</strong> what the bank never announces, and replaces that entry if the alert turns up later; and it shows all of it across four tabs —the <strong>month total</strong> with its breakdown by card, the searchable history, the archive of raw alerts and the permission settings—. It keeps the original alert behind every transaction, exports to CSV, hides itself from screenshots and the Recents view, and comes in Spanish and English. <strong>With no internet permission</strong>, so it cannot send anything anywhere.<span style="display:block;margin-top:12px;color:var(--text-3)"><strong>What it does not carry yet:</strong> periods other than the month, card names, categories, the summary charts, the budget, money in and transfers, and the tablet layout. It is all up above under “Done”, waiting for the next version.</span></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="envoltorio">
+    <h2>What speeds all of this up most</h2>
+    <ul class="limpia">
+      <li><span class="marca-item" aria-hidden="true" style="color:var(--accent)">→</span><span><strong>Joining the closed test.</strong> It is the critical path, and the page asks you for nothing: the button opens your own mail app with the message written and you send it yourself.</span></li>
+      <li><span class="marca-item" aria-hidden="true" style="color:var(--accent)">→</span><span><strong>Asking for your bank.</strong> The name is enough. Every one that arrives is one more bank recognised the day it ships.</span></li>
+      <li><span class="marca-item" aria-hidden="true" style="color:var(--accent)">→</span><span><strong>Sending the format of an alert that is not understood.</strong> With no amounts, dates, merchants or numbers: only the shape of the sentence.</span></li>
+    </ul>
+    <p style="margin-top:26px">
+      <a class="boton" href="closed-test.html">Join the closed test</a>
+      <a class="boton secundario" href="request-a-bank.html">Ask for my bank</a>
+    </p>
+    <div class="aviso" style="margin-top:26px"><p style="margin:0">This page is written by hand from the app’s plan, so it can lag a little behind what is actually inside. <strong>If anything here disagrees with the app, the app wins.</strong></p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="envoltorio">
+    <p>Xtracto · Built to work offline · <a href="privacidad.html#en">Privacy</a> · <a href="mailto:support@xtracto.app">support@xtracto.app</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

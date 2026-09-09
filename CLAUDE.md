@@ -4,8 +4,8 @@ Sitio público de **Xtracto**, la app de gastos que lee los avisos del banco y n
 punto de entrada de los formatos de aviso que envía la gente. Se publica en <https://xtracto.app>.
 
 **El código de la app no está aquí.** Vive en el repositorio privado de al lado, `../xtracto`, y es
-la fuente de verdad de dos cosas que esta web solo copia: la lista de bancos que el parser
-interpreta y el `PRIVACY.md`. Los hitos numerados del proyecto también son de allí
+la fuente de verdad de tres cosas que esta web solo copia: la lista de bancos que el parser
+interpreta, el `PRIVACY.md` y la hoja de ruta. Los hitos numerados del proyecto también son de allí
 (`../xtracto/README.md` → *Plan de hitos*, y los 9 y 10 en `../xtracto/CLAUDE.md`).
 
 ## Empieza leyendo NOTAS-INTERNAS.md
@@ -26,11 +26,17 @@ lo lleva todo sin avisar:
 |---|---|---|
 | `privacidad.html` | `construir.py` | el `PRIVACY.md` de `../xtracto` |
 | `bancos.html`, `banks.html` | `bancos.py` | su lista `SOPORTADOS` |
+| `novedades.html`, `roadmap.html` | `novedades.py` | sus listas `BLOQUES` y `VERSIONES` |
 | `sitemap.xml` | `sitemap.py` | las páginas sin `noindex` |
 
-**La barra de navegación está copiada en todas las páginas y dentro de esos dos generadores.** Si
-la tocas, tócala en los dos y regenera. `verificar.py` comprueba que ninguna se quede atrás,
+**La barra de navegación está copiada en todas las páginas y dentro de esos tres generadores.** Si
+la tocas, tócala en los tres y regenera. `verificar.py` comprueba que ninguna se quede atrás,
 que es la única razón de que no se desincronicen.
+
+**La hoja de ruta se traduce a mano desde `../xtracto`** (`README.md` → *Plan de hitos*, y
+`CLAUDE.md`). Es la tercera cosa que esta web copia del repositorio de al lado, y como las otras
+dos, allí manda. Las reglas para editarla —qué significa «Terminado», por qué no hay fechas— están
+escritas en la cabecera de `novedades.py`.
 
 ## Antes de empujar
 
